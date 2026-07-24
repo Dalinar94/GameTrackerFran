@@ -12,6 +12,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.foundation.layout.*
+import com.fran.gametrackerdefran.ui.components.AppTopBar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -21,29 +22,12 @@ fun AddGameScreen(navController: NavController) {
 
         topBar = {
 
-            TopAppBar(
-
-                title = {
-                    Text("Nuevo juego")
-                },
-
-                navigationIcon = {
-
-                    IconButton(
-                        onClick = {
-                            navController.popBackStack()
-                        }
-                    ) {
-
-                        Icon(
-                            imageVector = Icons.Default.ArrowBack,
-                            contentDescription = "Volver"
-                        )
-
-                    }
-
+            AppTopBar(
+                title = "Nuevo juego",
+                showBackButton = true,
+                onBackClick = {
+                    navController.popBackStack()
                 }
-
             )
 
         }

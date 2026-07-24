@@ -1,6 +1,5 @@
 package com.fran.gametrackerdefran.ui.screens
 
-
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -13,6 +12,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.navigation.NavController
 import com.fran.gametrackerdefran.ui.navigation.Screen
+import com.fran.gametrackerdefran.ui.components.AppTopBar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -46,14 +46,8 @@ fun HomeScreen(navController: NavController) {
 
         topBar = {
 
-            TopAppBar(
-
-                title = {
-
-                    Text("GameTracker de Fran")
-
-                }
-
+            AppTopBar(
+                title = "GameTracker"
             )
 
         },
