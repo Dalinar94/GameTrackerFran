@@ -1,6 +1,6 @@
 package com.fran.gametrackerdefran.ui.components
 
-
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -9,12 +9,18 @@ import androidx.compose.ui.unit.dp
 import com.fran.gametrackerdefran.data.model.Game
 
 @Composable
-fun GameCard(game: Game) {
+fun GameCard(
+    game: Game,
+    onClick: () -> Unit
+) {
 
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp)
+            .clickable {
+                onClick()
+            }
     ) {
 
         Column(

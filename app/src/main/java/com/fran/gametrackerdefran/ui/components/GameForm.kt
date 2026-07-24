@@ -12,6 +12,7 @@ import com.fran.gametrackerdefran.validation.GameFormValidator
 import com.fran.gametrackerdefran.data.model.GameFormErrors
 import com.fran.gametrackerdefran.data.model.Game
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.fran.gametrackerdefran.data.GameRepository
 import com.fran.gametrackerdefran.ui.viewmodel.GameViewModel
 @Composable
 fun GameForm(onSave: () -> Unit) {
@@ -134,7 +135,7 @@ fun GameForm(onSave: () -> Unit) {
                 if (result.isValid) {
 
                     val game = Game(
-                        id = `GameRepository.kt`.games.size + 1,
+                        id = GameRepository.games.size + 1,
                         nombre = formState.nombre,
                         plataforma = formState.plataforma,
                         horas = formState.horas.toInt(),

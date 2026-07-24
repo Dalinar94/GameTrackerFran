@@ -1,16 +1,35 @@
 package com.fran.gametrackerdefran.data
 
-import com.fran.gametrackerdefran.data.dao.GameDao
+import androidx.compose.runtime.mutableStateListOf
 import com.fran.gametrackerdefran.data.model.Game
-import kotlinx.coroutines.flow.Flow
+import com.fran.gametrackerdefran.data.model.GameStatus
 
-class GameRepository(
-    private val gameDao: GameDao
-) {
+object GameRepository {
 
-    val games: Flow<List<Game>> = gameDao.getAllGames()
+    val games = mutableStateListOf(
 
-    suspend fun addGame(game: Game) {
-        gameDao.insertGame(game)
+        Game(
+            id = 1,
+            nombre = "Elden Ring",
+            plataforma = "PS5",
+            horas = 120,
+            rating = 5,
+            comentario = "Obra maestra",
+            estado = GameStatus.COMPLETADO
+        ),
+
+        Game(
+            id = 2,
+            nombre = "Cyberpunk 2077",
+            plataforma = "PC",
+            horas = 35,
+            rating = 4,
+            comentario = "Muy divertido",
+            estado = GameStatus.JUGANDO
+        )
+
+    )
+    fun getGameById(id: Int): Game? {
+        return games.find { it.id == id }
     }
 }
