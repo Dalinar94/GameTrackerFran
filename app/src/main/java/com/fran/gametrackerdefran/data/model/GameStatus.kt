@@ -1,10 +1,15 @@
 package com.fran.gametrackerdefran.data.model
 
-enum class GameStatus {
+enum class GameStatus(
+    val displayName: String
+) {
 
-    PENDIENTE,
-    JUGANDO,
-    COMPLETADO,
-    ABANDONADO
+    PENDIENTE("Pendiente"),
+
+    JUGANDO("Jugando"),
+
+    COMPLETADO("Completado"),
+
+    ABANDONADO("Abandonado")
 
 }

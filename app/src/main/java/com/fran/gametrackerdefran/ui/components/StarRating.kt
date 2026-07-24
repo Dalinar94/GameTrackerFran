@@ -8,33 +8,49 @@ import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.outlined.Star
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
-
+import androidx.compose.foundation.layout.Column
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 @Composable
 fun StarRating(
     rating: Int,
-    onRatingChanged: (Int) -> Unit
+    onRatingChanged: (Int) -> Unit,
+    isError: Boolean = false,
+    errorMessage: String? = null
 ) {
 
-    Row {
+    Column {
 
-        for (i in 1..5) {
+        Row {
 
-            Icon(
-                imageVector =
-                    if (i <= rating)
-                        Icons.Filled.Star
-                    else
-                        Icons.Outlined.Star,
+            for (i in 1..5) {
 
-                contentDescription = "Estrella $i",
+                Icon(
+                    imageVector =
+                        if (i <= rating)
+                            Icons.Filled.Star
+                        else
+                            Icons.Outlined.Star,
 
-                modifier = androidx.compose.ui.Modifier
-                    .clickable {
+                    contentDescription = "Estrella $i",
 
-                        onRatingChanged(i)
+                    modifier = androidx.compose.ui.Modifier
+                        .clickable {
+                            onRatingChanged(i)
+                        }
 
-                    }
+                )
 
+            }
+
+        }
+
+        errorMessage?.let {
+
+            Text(
+                text = it,
+                color = MaterialTheme.colorScheme.error,
+                style = MaterialTheme.typography.bodySmall
             )
 
         }
