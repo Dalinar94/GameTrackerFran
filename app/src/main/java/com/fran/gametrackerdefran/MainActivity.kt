@@ -11,6 +11,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.fran.gametrackerdefran.ui.navigation.AppNavigation
 import com.fran.gametrackerdefran.ui.screens.HomeScreen
 import com.fran.gametrackerdefran.ui.theme.GameTrackerDeFranTheme
 /*
@@ -22,7 +23,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             GameTrackerDeFranTheme {
-                HomeScreen()
+                AppNavigation()
             }
         }
     }

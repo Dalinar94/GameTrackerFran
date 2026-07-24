@@ -11,10 +11,12 @@ import com.fran.gametrackerdefran.data.Game
 import com.fran.gametrackerdefran.ui.components.GameCard
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.navigation.NavController
+import com.fran.gametrackerdefran.ui.navigation.Screen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen() {
+fun HomeScreen(navController: NavController) {
 
     val juegos = listOf(
 
@@ -61,7 +63,7 @@ fun HomeScreen() {
 
                 onClick = {
 
-                    // Aquí irá la navegación
+                    navController.navigate(Screen.AddGame.route)
 
                 }
 
