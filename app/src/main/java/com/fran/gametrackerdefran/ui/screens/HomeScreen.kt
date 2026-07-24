@@ -14,34 +14,12 @@ import androidx.navigation.NavController
 import com.fran.gametrackerdefran.data.model.GameStatus
 import com.fran.gametrackerdefran.ui.navigation.Screen
 import com.fran.gametrackerdefran.ui.components.AppTopBar
-
+import com.fran.gametrackerdefran.data.GameRepository
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(navController: NavController) {
 
-    val juegos = listOf(
-
-        Game(
-            1,
-            "Elden Ring",
-            "PS5",
-            120,
-            5,
-            "Obra maestra",
-            GameStatus.COMPLETADO
-        ),
-
-        Game(
-            2,
-            "Cyberpunk 2077",
-            "PC",
-            35,
-            4,
-            "Muy divertido",
-            GameStatus.JUGANDO
-        )
-
-    )
+    val juegos = GameRepository.games
 
     Scaffold(
 
