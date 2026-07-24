@@ -11,6 +11,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+
 @Composable
 fun StarRating(
     rating: Int,
@@ -32,13 +35,17 @@ fun StarRating(
                         else
                             Icons.Outlined.Star,
 
+                    tint =
+                        if (i <= rating)
+                            Color(0xFFFFC107) // amarillo
+                        else
+                            Color.Gray,
+
                     contentDescription = "Estrella $i",
 
-                    modifier = androidx.compose.ui.Modifier
-                        .clickable {
-                            onRatingChanged(i)
-                        }
-
+                    modifier = Modifier.clickable {
+                        onRatingChanged(i)
+                    }
                 )
 
             }
