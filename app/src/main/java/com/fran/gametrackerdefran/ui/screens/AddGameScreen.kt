@@ -41,7 +41,9 @@ fun AddGameScreen(navController: NavController) {
                 .padding(padding),
             contentAlignment = Alignment.Center
         ) {
-            GameForm()
+            GameForm(onSave = {
+                navController.popBackStack()
+            })
         }
 
     }

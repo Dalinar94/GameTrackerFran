@@ -6,21 +6,19 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.fran.gametrackerdefran.data.model.Game
 import com.fran.gametrackerdefran.ui.components.GameCard
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.navigation.NavController
-import com.fran.gametrackerdefran.data.model.GameStatus
 import com.fran.gametrackerdefran.ui.navigation.Screen
 import com.fran.gametrackerdefran.ui.components.AppTopBar
-import com.fran.gametrackerdefran.data.GameRepository
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.fran.gametrackerdefran.ui.viewmodel.GameViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(navController: NavController) {
-
-    val juegos = GameRepository.games
-
+    val gameViewModel: GameViewModel = viewModel()
+    val juegos = gameViewModel.games
     Scaffold(
 
         topBar = {

@@ -1,7 +1,11 @@
 package com.fran.gametrackerdefran.data.model
-
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+@Entity(tableName = "games")
 data class Game(
-    val id: Int,
+    @PrimaryKey(autoGenerate = true)
+    val id: Int = 0,
+
     val nombre: String,
     val plataforma: String,
     val horas: Int,

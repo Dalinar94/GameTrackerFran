@@ -7,22 +7,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.fran.gametrackerdefran.data.estados
 import com.fran.gametrackerdefran.data.model.GameFormState
-import com.fran.gametrackerdefran.data.model.GameStatus
 import com.fran.gametrackerdefran.data.plataformas
-import com.fran.gametrackerdefran.ui.components.DropdownField
 import com.fran.gametrackerdefran.validation.GameFormValidator
 import com.fran.gametrackerdefran.data.model.GameFormErrors
+import com.fran.gametrackerdefran.data.model.Game
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.fran.gametrackerdefran.ui.viewmodel.GameViewModel
 @Composable
-fun GameForm() {
-
-    var nombre by remember { mutableStateOf("") }
-    var plataforma by remember { mutableStateOf("") }
-    var horas by remember { mutableStateOf("") }
-    var rating by remember { mutableStateOf(0) }
-    var comentario by remember { mutableStateOf("") }
-    var estado by remember { mutableStateOf<GameStatus?>(null) }
+fun GameForm(onSave: () -> Unit) {
+    val gameViewModel: GameViewModel = viewModel()
     var errors by remember { mutableStateOf(GameFormErrors()) }
-
+    var formState by remember {
+        mutableStateOf(GameFormState())
+    }
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -31,8 +28,12 @@ fun GameForm() {
     ) {
 
         OutlinedTextField(
-            value = nombre,
-            onValueChange = { nombre = it },
+            value = formState.nombre,
+            onValueChange = {
+                formState = formState.copy(
+                    nombre = it
+                )
+            },
             label = { Text("Nombre") },
             isError = errors.nombre != null,
             supportingText = {
@@ -45,18 +46,23 @@ fun GameForm() {
         DropdownField(
             label = "Plataforma",
             options = plataformas,
-            selectedOption = plataforma,
+            selectedOption = formState.plataforma,
             optionLabel = { it },
             onOptionSelected = {
-                plataforma = it
+                formState=formState.copy(
+                    plataforma = it
+                )
             } ,
             isError = errors.plataforma != null,
             errorMessage = errors.plataforma
         )
 
         OutlinedTextField(
-            value = horas,
-            onValueChange = { horas = it },
+            value = formState.horas,
+            onValueChange = {
+                formState = formState.copy(
+                horas = it
+            )},
             label = { Text("Horas") },
             modifier = Modifier.fillMaxWidth(),
                     isError = errors.horas != null,
@@ -70,10 +76,12 @@ fun GameForm() {
         DropdownField(
             label = "Estado",
             options = estados,
-            selectedOption = estado,
+            selectedOption = formState.estado,
             optionLabel = { it.displayName },
             onOptionSelected = {
-                estado = it
+                formState = formState.copy(
+                    estado = it
+                )
             },
             isError = errors.estado != null,
             errorMessage = errors.estado
@@ -82,11 +90,12 @@ fun GameForm() {
 
         StarRating(
 
-            rating = rating,
+            rating = formState.rating,
 
             onRatingChanged = {
-
-                rating = it
+                formState = formState.copy(
+                    rating = it
+                )
 
             },
 
@@ -97,8 +106,11 @@ fun GameForm() {
         )
 
         OutlinedTextField(
-            value = comentario,
-            onValueChange = { comentario = it },
+            value = formState.comentario,
+            onValueChange = {
+                formState = formState.copy(
+                comentario = it
+            ) },
             label = { Text("Comentario") },
             modifier = Modifier.fillMaxWidth()
         )
@@ -107,21 +119,33 @@ fun GameForm() {
             onClick = {
 
                     val form = GameFormState(
-                        nombre = nombre,
-                        plataforma = plataforma,
-                        horas = horas,
-                        rating = rating,
-                        comentario = comentario,
-                        estado = estado
+                        nombre = formState.nombre,
+                        plataforma = formState.plataforma,
+                        horas = formState.horas,
+                        rating = formState.rating,
+                        comentario =formState.comentario,
+                        estado = formState.estado
                     )
 
                     val result = GameFormValidator.validate(form)
 
                     errors = result.errors
 
-                    if (result.isValid) {
-                        println("Formulario correcto")
-                    }
+                if (result.isValid) {
+
+                    val game = Game(
+                        id = `GameRepository.kt`.games.size + 1,
+                        nombre = formState.nombre,
+                        plataforma = formState.plataforma,
+                        horas = formState.horas.toInt(),
+                        rating = formState.rating,
+                        comentario = formState.comentario,
+                        estado = formState.estado!!
+                    )
+
+                    gameViewModel.addGame(game)
+                    onSave()
+                }
 
 
             },
