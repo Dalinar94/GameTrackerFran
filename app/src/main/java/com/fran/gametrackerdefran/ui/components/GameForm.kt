@@ -12,7 +12,7 @@ fun GameForm() {
     var nombre by remember { mutableStateOf("") }
     var plataforma by remember { mutableStateOf("") }
     var horas by remember { mutableStateOf("") }
-    var rating by remember { mutableStateOf("") }
+    var rating by remember { mutableStateOf(0) }
     var comentario by remember { mutableStateOf("") }
 
     Column(
@@ -43,11 +43,18 @@ fun GameForm() {
             modifier = Modifier.fillMaxWidth()
         )
 
-        OutlinedTextField(
-            value = rating,
-            onValueChange = { rating = it },
-            label = { Text("Rating (1-5)") },
-            modifier = Modifier.fillMaxWidth()
+        Text("Valoración")
+
+        StarRating(
+
+            rating = rating,
+
+            onRatingChanged = {
+
+                rating = it
+
+            }
+
         )
 
         OutlinedTextField(
