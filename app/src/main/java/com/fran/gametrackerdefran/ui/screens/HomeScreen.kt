@@ -6,11 +6,12 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.fran.gametrackerdefran.data.Game
+import com.fran.gametrackerdefran.data.model.Game
 import com.fran.gametrackerdefran.ui.components.GameCard
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.navigation.NavController
+import com.fran.gametrackerdefran.data.model.GameStatus
 import com.fran.gametrackerdefran.ui.navigation.Screen
 import com.fran.gametrackerdefran.ui.components.AppTopBar
 
@@ -27,7 +28,7 @@ fun HomeScreen(navController: NavController) {
             120,
             5,
             "Obra maestra",
-            "Completado"
+            GameStatus.COMPLETADO
         ),
 
         Game(
@@ -37,7 +38,7 @@ fun HomeScreen(navController: NavController) {
             35,
             4,
             "Muy divertido",
-            "Jugando"
+            GameStatus.JUGANDO
         )
 
     )

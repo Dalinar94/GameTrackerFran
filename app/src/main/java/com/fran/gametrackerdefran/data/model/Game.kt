@@ -1,5 +1,4 @@
-package com.fran.gametrackerdefran.data
-
+package com.fran.gametrackerdefran.data.model
 
 data class Game(
     val id: Int,
@@ -8,5 +7,5 @@ data class Game(
     val horas: Int,
     val rating: Int,
     val comentario: String,
-    val estado: String
+    val estado: GameStatus
 )
