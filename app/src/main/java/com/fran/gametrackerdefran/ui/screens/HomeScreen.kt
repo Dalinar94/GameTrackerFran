@@ -1,12 +1,18 @@
 package com.fran.gametrackerdefran.ui.screens
 
 
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import com.fran.gametrackerdefran.data.Game
 import com.fran.gametrackerdefran.ui.components.GameCard
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen() {
 
@@ -34,11 +40,52 @@ fun HomeScreen() {
 
     )
 
-    LazyColumn {
+    Scaffold(
 
-        items(juegos) { juego ->
+        topBar = {
 
-            GameCard(game = juego)
+            TopAppBar(
+
+                title = {
+
+                    Text("GameTracker de Fran")
+
+                }
+
+            )
+
+        },
+        floatingActionButton = {
+
+            FloatingActionButton(
+
+                onClick = {
+
+                    // Aquí irá la navegación
+
+                }
+
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Add,
+                    contentDescription = "Añadir juego"
+                )
+
+            }
+
+        }
+
+    ) { padding ->
+
+        LazyColumn(
+            modifier = Modifier.padding(padding)
+        ) {
+
+            items(juegos) { juego ->
+
+                GameCard(game = juego)
+
+            }
 
         }
 
