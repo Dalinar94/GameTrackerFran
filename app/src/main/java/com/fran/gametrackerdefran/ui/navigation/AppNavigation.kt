@@ -30,7 +30,7 @@ fun AppNavigation() {
         }
 
         composable(Screen.Statistics.route) {
-            StatisticsScreen()
+            StatisticsScreen(navController)
         }
         composable(
             route = Screen.EditGame.route,

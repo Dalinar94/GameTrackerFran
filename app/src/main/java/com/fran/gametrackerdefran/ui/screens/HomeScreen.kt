@@ -26,6 +26,8 @@ import com.fran.gametrackerdefran.ui.components.StatusFilterBar
 import androidx.compose.material.icons.filled.BarChart
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import com.fran.gametrackerdefran.ui.components.SearchBar
+import com.fran.gametrackerdefran.ui.components.SortMenu
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -75,7 +77,20 @@ fun HomeScreen(navController: NavController) {
         LazyColumn(
             modifier = Modifier.padding(padding)
         ) {
+            item {
 
+                SearchBar(
+                    query = gameViewModel.searchQuery,
+                    onQueryChange = gameViewModel::updateSearchQuery
+                )
+
+            }
+            item {
+                SortMenu(
+                    selectedSort = gameViewModel.selectedSort,
+                    onSortSelected = gameViewModel::setSort
+                )
+            }
             item {
 
                 StatusFilterBar(

@@ -1,27 +1,97 @@
 package com.fran.gametrackerdefran.ui.screens
 
-
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-
+import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import com.fran.gametrackerdefran.ui.components.AppTopBar
+import com.fran.gametrackerdefran.ui.components.StatisticCard
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.fran.gametrackerdefran.ui.model.Statistic
+import com.fran.gametrackerdefran.ui.viewmodel.GameViewModel
 @Composable
-fun StatisticsScreen() {
+fun StatisticsScreen(navController: NavController) {
+    val gameViewModel: GameViewModel = viewModel()
+    val statistics = listOf(
 
-    Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
-    ) {
+        Statistic(
+            title = "Juegos totales",
+            value = gameViewModel.totalGames.toString()
+        ),
 
-        Text(
-            text = "Estadísticas",
-            style = MaterialTheme.typography.headlineMedium
+        Statistic(
+            title = "Completados",
+            value = gameViewModel.completedGames.toString()
+        ),
+
+        Statistic(
+            title = "Jugando",
+            value = gameViewModel.playingGames.toString()
+        ),
+
+        Statistic(
+            title = "Pendientes",
+            value = gameViewModel.pendingGames.toString()
+        ),
+
+        Statistic(
+            title = "Abandonados",
+            value = gameViewModel.abandonatedGames.toString()
+        ),
+
+        Statistic(
+            title = "Valoración media",
+            value = String.format("%.1f ⭐", gameViewModel.averageRating)
+        ),
+
+        Statistic(
+            title = "Completados (%)",
+            value = "${gameViewModel.completionPercentage}%"
         )
 
-    }
+    )
 
-}
+    Scaffold(
+
+        topBar = {
+
+            AppTopBar(
+                title = "Estadísticas",
+                showBackButton = true,
+                onBackClick = {
+                    navController.popBackStack()
+                }
+            )
+
+        }
+
+    ) { padding ->
+
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(padding),
+            contentPadding = PaddingValues(16.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+
+            items(statistics) { statistic ->
+
+                StatisticCard(
+                    title = statistic.title,
+                    value = statistic.value
+                )
+
+            }
+
+        }
+        }
+
+    }
