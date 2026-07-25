@@ -9,6 +9,7 @@ import androidx.navigation.navArgument
 import com.fran.gametrackerdefran.ui.screens.AddGameScreen
 import com.fran.gametrackerdefran.ui.screens.EditGameScreen
 import com.fran.gametrackerdefran.ui.screens.HomeScreen
+import com.fran.gametrackerdefran.ui.screens.StatisticsScreen
 
 @Composable
 fun AppNavigation() {
@@ -28,6 +29,9 @@ fun AppNavigation() {
             AddGameScreen(navController)
         }
 
+        composable(Screen.Statistics.route) {
+            StatisticsScreen()
+        }
         composable(
             route = Screen.EditGame.route,
             arguments = listOf(

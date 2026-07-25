@@ -39,4 +39,8 @@ object GameRepository {
             games[index] = updatedGame
         }
     }
+
+    fun deleteGame(game: Game) {
+        games.remove(game)
+    }
 }

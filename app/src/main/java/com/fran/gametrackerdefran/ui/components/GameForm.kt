@@ -19,6 +19,7 @@ fun GameForm( game: Game? = null,
               onSave: () -> Unit) {
     val gameViewModel: GameViewModel = viewModel()
     var errors by remember { mutableStateOf(GameFormErrors()) }
+    var showDeleteDialog by remember { mutableStateOf(false) }
     var formState by remember(game) {
         mutableStateOf(
             if (game == null) {
@@ -40,6 +41,7 @@ fun GameForm( game: Game? = null,
             .fillMaxSize()
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)
+
     ) {
 
         OutlinedTextField(
@@ -181,7 +183,63 @@ fun GameForm( game: Game? = null,
             )
 
         }
+        if (game != null) {
+
+            OutlinedButton(
+                onClick = {
+                    showDeleteDialog = true
+                },
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text("Eliminar")
+            }
+
+        }
+    }
+    if (showDeleteDialog && game != null) {
+
+        AlertDialog(
+            onDismissRequest = {
+                showDeleteDialog = false
+            },
+
+            title = {
+                Text("Eliminar juego")
+            },
+
+            text = {
+                Text(
+                    "¿Seguro que quieres eliminar \"${game.nombre}\"?\n\nEsta acción no se puede deshacer."
+                )
+            },
+
+            confirmButton = {
+
+                TextButton(
+                    onClick = {
+                        gameViewModel.deleteGame(game)
+                        showDeleteDialog = false
+                        onSave()
+                    }
+                ) {
+                    Text("Eliminar")
+                }
+
+            },
+
+            dismissButton = {
+
+                TextButton(
+                    onClick = {
+                        showDeleteDialog = false
+                    }
+                ) {
+                    Text("Cancelar")
+                }
+
+            }
+
+        )
 
     }
-
 }
