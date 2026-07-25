@@ -4,25 +4,44 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.fran.gametrackerdefran.data.GameRepository
 import com.fran.gametrackerdefran.data.model.Game
-import com.fran.gametrackerdefran.data.model.GameStatus
 import com.fran.gametrackerdefran.data.model.GameSortOption
-class GameViewModel : ViewModel() {
+import com.fran.gametrackerdefran.data.model.GameStatus
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
-    val games = GameRepository.games
+class GameViewModel(
+    private val repository: GameRepository
+) : ViewModel() {
 
-    var selectedFilter: GameStatus? by mutableStateOf(null)
+    private val _games = MutableStateFlow<List<Game>>(emptyList())
+    val games: StateFlow<List<Game>> = _games
+
+    init {
+        viewModelScope.launch {
+            repository.games.collectLatest {
+                _games.value = it
+            }
+        }
+    }
+
+    var selectedFilter by mutableStateOf<GameStatus?>(null)
         private set
 
     var selectedSort by mutableStateOf(GameSortOption.NAME)
         private set
+
     var searchQuery by mutableStateOf("")
         private set
+
     val filteredGames: List<Game>
         get() {
 
-            val filtered = games.filter { game ->
+            val filtered = games.value.filter { game ->
 
                 val matchesFilter =
                     selectedFilter == null ||
@@ -55,70 +74,79 @@ class GameViewModel : ViewModel() {
             }
 
         }
+
     val totalGames: Int
-        get() = games.size
+        get() = games.value.size
 
     val completedGames: Int
-        get() = games.count {
+        get() = games.value.count {
             it.estado == GameStatus.COMPLETADO
         }
 
     val playingGames: Int
-        get() = games.count {
+        get() = games.value.count {
             it.estado == GameStatus.JUGANDO
         }
 
     val pendingGames: Int
-        get() = games.count {
+        get() = games.value.count {
             it.estado == GameStatus.PENDIENTE
         }
+
     val abandonatedGames: Int
-        get() = games.count {
+        get() = games.value.count {
             it.estado == GameStatus.ABANDONADO
         }
+
     val averageRating: Double
-        get() {
-
-            if (games.isEmpty()) {
-                return 0.0
+        get() =
+            if (games.value.isEmpty()) {
+                0.0
+            } else {
+                games.value.map { it.rating }.average()
             }
-
-            return games
-                .map { it.rating }
-                .average()
-
-        }
 
     val completionPercentage: Int
-        get() {
-
-            if (games.isEmpty()) {
-                return 0
+        get() =
+            if (games.value.isEmpty()) {
+                0
+            } else {
+                (completedGames * 100) / totalGames
             }
-
-            return (completedGames * 100) / totalGames
-
-        }
 
     fun setFilter(filter: GameStatus?) {
         selectedFilter = filter
     }
+
     fun setSort(sort: GameSortOption) {
         selectedSort = sort
-    }
-    fun addGame(game: Game) {
-        GameRepository.games.add(game)
-    }
-
-    fun updateGame(game: Game) {
-        GameRepository.updateGame(game)
-    }
-
-    fun deleteGame(game: Game) {
-        GameRepository.deleteGame(game)
     }
 
     fun updateSearchQuery(query: String) {
         searchQuery = query
+    }
+
+    fun addGame(game: Game) {
+        viewModelScope.launch {
+            repository.insertGame(game)
+        }
+    }
+
+    fun updateGame(game: Game) {
+        viewModelScope.launch {
+            repository.updateGame(game)
+        }
+    }
+
+    fun deleteGame(game: Game) {
+        viewModelScope.launch {
+            repository.deleteGame(game)
+        }
+    }
+    suspend fun getGameById(id: Int): Game? {
+        return repository.getGameById(id)
+    }
+    fun findGameById(id: Int): Game? {
+        return games.value.find { it.id == id }
     }
 }

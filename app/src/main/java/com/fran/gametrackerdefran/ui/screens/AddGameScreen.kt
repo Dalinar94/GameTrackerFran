@@ -14,10 +14,13 @@ import androidx.compose.material3.*
 import androidx.compose.foundation.layout.*
 import com.fran.gametrackerdefran.ui.components.AppTopBar
 import com.fran.gametrackerdefran.ui.components.GameForm
+import com.fran.gametrackerdefran.ui.viewmodel.GameViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddGameScreen(navController: NavController) {
+fun AddGameScreen( navController: NavController,
+                   gameViewModel: GameViewModel
+) {
 
     Scaffold(
 
@@ -41,9 +44,12 @@ fun AddGameScreen(navController: NavController) {
                 .padding(padding),
             contentAlignment = Alignment.Center
         ) {
-            GameForm(onSave = {
-                navController.popBackStack()
-            })
+            GameForm(
+                gameViewModel = gameViewModel,
+                onSave = {
+                    navController.popBackStack()
+                }
+            )
         }
 
     }

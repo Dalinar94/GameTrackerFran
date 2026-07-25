@@ -17,8 +17,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.fran.gametrackerdefran.ui.model.Statistic
 import com.fran.gametrackerdefran.ui.viewmodel.GameViewModel
 @Composable
-fun StatisticsScreen(navController: NavController) {
-    val gameViewModel: GameViewModel = viewModel()
+fun StatisticsScreen(navController: NavController, gameViewModel: GameViewModel) {
     val statistics = listOf(
 
         Statistic(

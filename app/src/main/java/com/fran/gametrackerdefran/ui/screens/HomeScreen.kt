@@ -1,8 +1,5 @@
 package com.fran.gametrackerdefran.ui.screens
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -11,16 +8,11 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.fran.gametrackerdefran.data.model.GameStatus
 import com.fran.gametrackerdefran.ui.components.AppTopBar
 import com.fran.gametrackerdefran.ui.components.GameCard
 import com.fran.gametrackerdefran.ui.navigation.Screen
 import com.fran.gametrackerdefran.ui.viewmodel.GameViewModel
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
 import com.fran.gametrackerdefran.ui.components.EmptyGames
 import com.fran.gametrackerdefran.ui.components.StatusFilterBar
 import androidx.compose.material.icons.filled.BarChart
@@ -28,12 +20,13 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import com.fran.gametrackerdefran.ui.components.SearchBar
 import com.fran.gametrackerdefran.ui.components.SortMenu
-
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(navController: NavController) {
-
-    val gameViewModel: GameViewModel = viewModel()
+fun HomeScreen( navController: NavController,
+                gameViewModel: GameViewModel) {
+    val games by gameViewModel.games.collectAsState()
 
     Scaffold(
 
@@ -100,7 +93,7 @@ fun HomeScreen(navController: NavController) {
 
             }
 
-            if (gameViewModel.filteredGames.isEmpty()) {
+            if (games.isEmpty()) {
 
                 item {
                     EmptyGames()
@@ -109,7 +102,6 @@ fun HomeScreen(navController: NavController) {
             } else {
 
                 items(gameViewModel.filteredGames) { juego ->
-
                     GameCard(
                         game = juego,
                         onClick = {

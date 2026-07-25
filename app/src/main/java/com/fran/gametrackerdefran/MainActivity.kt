@@ -4,26 +4,32 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.fran.gametrackerdefran.data.GameRepository
+import com.fran.gametrackerdefran.data.local.GameDatabase
 import com.fran.gametrackerdefran.ui.navigation.AppNavigation
-import com.fran.gametrackerdefran.ui.screens.HomeScreen
 import com.fran.gametrackerdefran.ui.theme.GameTrackerDeFranTheme
-/*
-el archivo principal
- */
+import com.fran.gametrackerdefran.ui.viewmodel.GameViewModel
+import com.fran.gametrackerdefran.ui.viewmodel.GameViewModelFactory
+
 class MainActivity : ComponentActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
         setContent {
+
+            val database = GameDatabase.getDatabase(applicationContext)
+            val repository = GameRepository(database.gameDao())
+            val factory = GameViewModelFactory(repository)
+
+            val gameViewModel: GameViewModel = viewModel(
+                factory = factory
+            )
+
             GameTrackerDeFranTheme {
-                AppNavigation()
+                AppNavigation(gameViewModel)
             }
         }
     }

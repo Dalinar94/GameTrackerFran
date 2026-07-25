@@ -10,9 +10,9 @@ import com.fran.gametrackerdefran.ui.screens.AddGameScreen
 import com.fran.gametrackerdefran.ui.screens.EditGameScreen
 import com.fran.gametrackerdefran.ui.screens.HomeScreen
 import com.fran.gametrackerdefran.ui.screens.StatisticsScreen
-
+import com.fran.gametrackerdefran.ui.viewmodel.GameViewModel
 @Composable
-fun AppNavigation() {
+fun AppNavigation(gameViewModel: GameViewModel ) {
 
     val navController = rememberNavController()
 
@@ -22,15 +22,25 @@ fun AppNavigation() {
     ) {
 
         composable(Screen.Home.route) {
-            HomeScreen(navController)
+            HomeScreen(
+                navController = navController,
+                gameViewModel = gameViewModel
+            )
+
         }
 
         composable(Screen.AddGame.route) {
-            AddGameScreen(navController)
+            AddGameScreen(
+                navController = navController,
+                gameViewModel = gameViewModel
+            )
         }
 
         composable(Screen.Statistics.route) {
-            StatisticsScreen(navController)
+            StatisticsScreen(
+                navController = navController,
+                gameViewModel = gameViewModel
+            )
         }
         composable(
             route = Screen.EditGame.route,
@@ -46,7 +56,8 @@ fun AppNavigation() {
 
             EditGameScreen(
                 navController = navController,
-                gameId = gameId
+                gameId = gameId,
+                gameViewModel = gameViewModel
             )
 
         }

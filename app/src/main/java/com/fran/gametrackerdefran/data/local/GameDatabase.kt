@@ -1,12 +1,10 @@
-package com.fran.gametrackerdefran.data.database
+package com.fran.gametrackerdefran.data.local
 
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import com.fran.gametrackerdefran.data.converters.GameStatusConverter
-import com.fran.gametrackerdefran.data.dao.GameDao
 import com.fran.gametrackerdefran.data.model.Game
 
 @Database(
@@ -14,7 +12,7 @@ import com.fran.gametrackerdefran.data.model.Game
     version = 1,
     exportSchema = false
 )
-@TypeConverters(GameStatusConverter::class)
+@TypeConverters(GameConverters::class)
 abstract class GameDatabase : RoomDatabase() {
 
     abstract fun gameDao(): GameDao
@@ -25,7 +23,9 @@ abstract class GameDatabase : RoomDatabase() {
         private var INSTANCE: GameDatabase? = null
 
         fun getDatabase(context: Context): GameDatabase {
+
             return INSTANCE ?: synchronized(this) {
+
                 val instance = Room.databaseBuilder(
                     context.applicationContext,
                     GameDatabase::class.java,
@@ -33,6 +33,7 @@ abstract class GameDatabase : RoomDatabase() {
                 ).build()
 
                 INSTANCE = instance
+
                 instance
             }
         }

@@ -12,16 +12,17 @@ import androidx.navigation.NavController
 import com.fran.gametrackerdefran.data.GameRepository
 import com.fran.gametrackerdefran.ui.components.AppTopBar
 import com.fran.gametrackerdefran.ui.components.GameForm
+import com.fran.gametrackerdefran.ui.viewmodel.GameViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EditGameScreen(
     navController: NavController,
-    gameId: Int
+    gameId: Int,
+    gameViewModel: GameViewModel
 ) {
 
-    val game = GameRepository.getGameById(gameId)
-
+    val game = gameViewModel.findGameById(gameId)
     Scaffold(
 
         topBar = {
@@ -46,6 +47,7 @@ fun EditGameScreen(
         ) {
 
             GameForm(
+                gameViewModel = gameViewModel,
                 game = game,
                 onSave = {
                     navController.popBackStack()

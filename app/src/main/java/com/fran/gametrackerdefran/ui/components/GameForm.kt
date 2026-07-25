@@ -11,13 +11,13 @@ import com.fran.gametrackerdefran.data.plataformas
 import com.fran.gametrackerdefran.validation.GameFormValidator
 import com.fran.gametrackerdefran.data.model.GameFormErrors
 import com.fran.gametrackerdefran.data.model.Game
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.fran.gametrackerdefran.data.GameRepository
 import com.fran.gametrackerdefran.ui.viewmodel.GameViewModel
 @Composable
-fun GameForm( game: Game? = null,
-              onSave: () -> Unit) {
-    val gameViewModel: GameViewModel = viewModel()
+fun GameForm(
+    gameViewModel: GameViewModel,
+    game: Game? = null,
+    onSave: () -> Unit
+) {
     var errors by remember { mutableStateOf(GameFormErrors()) }
     var showDeleteDialog by remember { mutableStateOf(false) }
     var formState by remember(game) {
@@ -151,7 +151,7 @@ fun GameForm( game: Game? = null,
                 if (result.isValid) {
 
                     val gameToSave = Game(
-                        id = game?.id ?: GameRepository.games.size + 1,
+                        id = game?.id ?: 0,
                         nombre = formState.nombre,
                         plataforma = formState.plataforma,
                         horas = formState.horas.toInt(),
