@@ -32,4 +32,11 @@ object GameRepository {
     fun getGameById(id: Int): Game? {
         return games.find { it.id == id }
     }
+    fun updateGame(updatedGame: Game) {
+        val index = games.indexOfFirst { it.id == updatedGame.id }
+
+        if (index != -1) {
+            games[index] = updatedGame
+        }
+    }
 }

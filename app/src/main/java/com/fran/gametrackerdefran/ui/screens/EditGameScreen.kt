@@ -9,6 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
+import com.fran.gametrackerdefran.data.GameRepository
 import com.fran.gametrackerdefran.ui.components.AppTopBar
 import com.fran.gametrackerdefran.ui.components.GameForm
 
@@ -18,6 +19,8 @@ fun EditGameScreen(
     navController: NavController,
     gameId: Int
 ) {
+
+    val game = GameRepository.getGameById(gameId)
 
     Scaffold(
 
@@ -43,6 +46,7 @@ fun EditGameScreen(
         ) {
 
             GameForm(
+                game = game,
                 onSave = {
                     navController.popBackStack()
                 }

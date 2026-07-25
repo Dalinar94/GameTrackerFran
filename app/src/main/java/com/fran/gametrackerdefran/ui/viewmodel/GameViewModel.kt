@@ -11,5 +11,7 @@ class GameViewModel : ViewModel() {
     fun addGame(game: Game) {
         GameRepository.games.add(game)
     }
-
+    fun updateGame(game: Game) {
+        GameRepository.updateGame(game)
+    }
 }

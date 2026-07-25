@@ -15,11 +15,25 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.fran.gametrackerdefran.data.GameRepository
 import com.fran.gametrackerdefran.ui.viewmodel.GameViewModel
 @Composable
-fun GameForm(onSave: () -> Unit) {
+fun GameForm( game: Game? = null,
+              onSave: () -> Unit) {
     val gameViewModel: GameViewModel = viewModel()
     var errors by remember { mutableStateOf(GameFormErrors()) }
-    var formState by remember {
-        mutableStateOf(GameFormState())
+    var formState by remember(game) {
+        mutableStateOf(
+            if (game == null) {
+                GameFormState()
+            } else {
+                GameFormState(
+                    nombre = game.nombre,
+                    plataforma = game.plataforma,
+                    horas = game.horas.toString(),
+                    rating = game.rating,
+                    comentario = game.comentario,
+                    estado = game.estado
+                )
+            }
+        )
     }
     Column(
         modifier = Modifier
@@ -134,8 +148,8 @@ fun GameForm(onSave: () -> Unit) {
 
                 if (result.isValid) {
 
-                    val game = Game(
-                        id = GameRepository.games.size + 1,
+                    val gameToSave = Game(
+                        id = game?.id ?: GameRepository.games.size + 1,
                         nombre = formState.nombre,
                         plataforma = formState.plataforma,
                         horas = formState.horas.toInt(),
@@ -144,7 +158,12 @@ fun GameForm(onSave: () -> Unit) {
                         estado = formState.estado!!
                     )
 
-                    gameViewModel.addGame(game)
+                    if (game == null) {
+                        gameViewModel.addGame(gameToSave)
+                    } else {
+                        gameViewModel.updateGame(gameToSave)
+                    }
+
                     onSave()
                 }
 
@@ -153,7 +172,13 @@ fun GameForm(onSave: () -> Unit) {
             modifier = Modifier.fillMaxWidth()
         ) {
 
-            Text("Guardar")
+            Text(
+                if (game == null) {
+                    "Guardar"
+                } else {
+                    "Actualizar"
+                }
+            )
 
         }
 
