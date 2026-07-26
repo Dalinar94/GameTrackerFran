@@ -1,27 +1,21 @@
 package com.fran.gametrackerdefran.ui.components
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Schedule
 import androidx.compose.material.icons.filled.SportsEsports
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.fran.gametrackerdefran.data.model.Game
+import com.fran.gametrackerdefran.ui.theme.GTElevation
+import com.fran.gametrackerdefran.ui.theme.GTRadius
+import com.fran.gametrackerdefran.ui.theme.GTSpacing
 
 @Composable
 fun GameCard(
@@ -32,91 +26,121 @@ fun GameCard(
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 8.dp, vertical = 6.dp)
+            .padding(
+                horizontal = GTSpacing.Medium,
+                vertical = GTSpacing.Small
+            )
             .clickable(onClick = onClick),
+        shape = RoundedCornerShape(GTRadius.Large),
         elevation = CardDefaults.cardElevation(
-            defaultElevation = 4.dp
+            defaultElevation = GTElevation.Card
         )
     ) {
 
-        Column(
-            modifier = Modifier.padding(16.dp)
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(GTSpacing.Large)
         ) {
 
-            // Cabecera
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
+            // Portada (placeholder)
+            Card(
+                modifier = Modifier
+                    .width(80.dp)
+                    .height(120.dp),
+                shape = RoundedCornerShape(GTRadius.Medium),
+                elevation = CardDefaults.cardElevation(
+                    defaultElevation = GTElevation.Card
+                )
             ) {
 
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+
+                    Icon(
+                        imageVector = Icons.Default.SportsEsports,
+                        contentDescription = null,
+                        modifier = Modifier.size(36.dp)
+                    )
+
+                }
+
+            }
+
+            Spacer(modifier = Modifier.width(GTSpacing.Medium))
+
+            // Información
+            Column(
+                modifier = Modifier.weight(1f)
+            ) {
+
+                // Cabecera
                 Text(
                     text = game.nombre,
                     style = MaterialTheme.typography.titleLarge,
-                    modifier = Modifier.weight(1f)
+                    maxLines = 3,
+                    overflow = TextOverflow.Ellipsis
                 )
 
-                Spacer(modifier = Modifier.width(12.dp))
+                Spacer(modifier = Modifier.height(GTSpacing.Small))
 
                 RatingStars(
                     rating = game.rating
                 )
 
-            }
+                Spacer(modifier = Modifier.height(GTSpacing.Medium))
 
-            Spacer(modifier = Modifier.height(16.dp))
-
-            // Plataforma y horas
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-
-                RowWithIcon(
+                InfoRow(
                     icon = {
-                        androidx.compose.material3.Icon(
-                            Icons.Default.SportsEsports,
+                        LibraryIcon(game.plataforma)
+                    },
+                    label = "Biblioteca",
+                    value = game.plataforma
+                )
+
+                Spacer(modifier = Modifier.height(GTSpacing.Small))
+
+                InfoRow(
+                    icon = {
+                        Icon(
+                            imageVector = Icons.Default.Schedule,
                             contentDescription = null
                         )
                     },
-                    text = game.plataforma
+                    label = "Horas",
+                    value = "${game.horas} h"
                 )
 
-                RowWithIcon(
-                    icon = {
-                        androidx.compose.material3.Icon(
-                            Icons.Default.Schedule,
-                            contentDescription = null
-                        )
-                    },
-                    text = "${game.horas} h"
+                Spacer(modifier = Modifier.height(GTSpacing.Medium))
+
+                StatusChip(
+                    status = game.estado
                 )
 
+                if (game.comentario.isNotBlank()) {
+
+                    Spacer(modifier = Modifier.height(GTSpacing.Medium))
+
+                    HorizontalDivider()
+
+                    Spacer(modifier = Modifier.height(GTSpacing.Medium))
+
+                    Text(
+                        text = "Comentario",
+                        style = MaterialTheme.typography.titleSmall
+                    )
+
+                    Spacer(modifier = Modifier.height(GTSpacing.Small))
+
+                    Text(
+                        text = game.comentario,
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
             }
-
-            Spacer(modifier = Modifier.height(12.dp))
-
-            StatusChip(
-                status = game.estado
-            )
-
-            if (game.comentario.isNotBlank()) {
-
-                Spacer(modifier = Modifier.height(12.dp))
-
-                HorizontalDivider()
-
-                Spacer(modifier = Modifier.height(12.dp))
-
-                Text(
-                    text = game.comentario,
-                    style = MaterialTheme.typography.bodyMedium
-                )
-
-            }
-
         }
-
     }
-
 }

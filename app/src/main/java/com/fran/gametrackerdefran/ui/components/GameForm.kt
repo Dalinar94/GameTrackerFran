@@ -61,7 +61,7 @@ fun GameForm(
         )
 
         DropdownField(
-            label = "Plataforma",
+            label = "Biblioteca",
             options = plataformas,
             selectedOption = formState.plataforma,
             optionLabel = { it },
