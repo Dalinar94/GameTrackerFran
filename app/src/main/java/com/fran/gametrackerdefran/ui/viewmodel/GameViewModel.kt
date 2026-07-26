@@ -114,6 +114,14 @@ class GameViewModel(
                 (completedGames * 100) / totalGames
             }
 
+    val gamesByPlatform: List<Pair<String, Int>>
+        get() =
+            games.value
+                .groupingBy { it.plataforma }
+                .eachCount()
+                .toList()
+                .sortedByDescending { it.second }
+
     fun setFilter(filter: GameStatus?) {
         selectedFilter = filter
     }

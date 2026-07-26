@@ -14,6 +14,9 @@ import androidx.navigation.NavController
 import com.fran.gametrackerdefran.ui.components.AppTopBar
 import com.fran.gametrackerdefran.ui.components.StatisticCard
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.fran.gametrackerdefran.ui.components.DistributionRow
+import com.fran.gametrackerdefran.ui.components.StatisticRow
+import com.fran.gametrackerdefran.ui.components.StatisticsSection
 import com.fran.gametrackerdefran.ui.model.Statistic
 import com.fran.gametrackerdefran.ui.viewmodel.GameViewModel
 @Composable
@@ -81,12 +84,71 @@ fun StatisticsScreen(navController: NavController, gameViewModel: GameViewModel)
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
 
-            items(statistics) { statistic ->
+            item {
 
-                StatisticCard(
-                    title = statistic.title,
-                    value = statistic.value
-                )
+                StatisticsSection(
+                    title = "📊 Resumen"
+                ) {
+
+                    statistics.forEach { statistic ->
+
+                        StatisticRow(
+                            title = statistic.title,
+                            value = statistic.value
+                        )
+
+                    }
+
+                }
+
+            }
+
+            item {
+
+                StatisticsSection(
+                    title = "📈 Estados"
+                ) {
+
+                    DistributionRow(
+                        label = "Completados",
+                        value = gameViewModel.completedGames
+                    )
+
+                    DistributionRow(
+                        label = "Jugando",
+                        value = gameViewModel.playingGames
+                    )
+
+                    DistributionRow(
+                        label = "Pendientes",
+                        value = gameViewModel.pendingGames
+                    )
+
+                    DistributionRow(
+                        label = "Abandonados",
+                        value = gameViewModel.abandonatedGames
+                    )
+
+                }
+
+            }
+
+            item {
+
+                StatisticsSection(
+                    title = "🎮 Plataformas"
+                ) {
+
+                    gameViewModel.gamesByPlatform.forEach { (platform, count) ->
+
+                        DistributionRow(
+                            label = platform,
+                            value = count
+                        )
+
+                    }
+
+                }
 
             }
 
