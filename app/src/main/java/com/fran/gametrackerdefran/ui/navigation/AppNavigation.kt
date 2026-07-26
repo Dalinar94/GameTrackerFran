@@ -8,6 +8,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.fran.gametrackerdefran.ui.screens.AddGameScreen
 import com.fran.gametrackerdefran.ui.screens.EditGameScreen
+import com.fran.gametrackerdefran.ui.screens.GameDetailScreen
 import com.fran.gametrackerdefran.ui.screens.HomeScreen
 import com.fran.gametrackerdefran.ui.screens.StatisticsScreen
 import com.fran.gametrackerdefran.ui.viewmodel.GameViewModel
@@ -42,6 +43,33 @@ fun AppNavigation(gameViewModel: GameViewModel ) {
                 gameViewModel = gameViewModel
             )
         }
+
+        composable(
+            route = Screen.GameDetail.route,
+            arguments = listOf(
+                navArgument("gameId") {
+                    type = NavType.IntType
+                }
+            )
+        ) { backStackEntry ->
+
+            val gameId =
+                backStackEntry.arguments?.getInt("gameId") ?: 0
+
+            GameDetailScreen(
+                gameId = gameId,
+                gameViewModel = gameViewModel,
+                onEdit = {
+                    navController.navigate(
+                        Screen.EditGame.createRoute(gameId)
+                    )
+                },
+                onBack = {
+                    navController.popBackStack()
+                }
+            )
+        }
+
         composable(
             route = Screen.EditGame.route,
             arguments = listOf(

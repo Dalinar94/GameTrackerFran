@@ -106,7 +106,7 @@ fun HomeScreen( navController: NavController,
                         game = juego,
                         onClick = {
                             navController.navigate(
-                                Screen.EditGame.createRoute(juego.id)
+                                Screen.GameDetail.createRoute(juego.id)
                             )
                         },
                         onFavoriteClick = {

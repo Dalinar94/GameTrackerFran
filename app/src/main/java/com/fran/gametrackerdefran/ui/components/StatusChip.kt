@@ -5,7 +5,6 @@ import androidx.compose.material3.AssistChipDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.graphics.Color
 import com.fran.gametrackerdefran.data.model.GameStatus
 import com.fran.gametrackerdefran.ui.theme.Error
 import com.fran.gametrackerdefran.ui.theme.Info

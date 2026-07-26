@@ -17,7 +17,8 @@ import androidx.compose.ui.graphics.Color
 @Composable
 fun StarRating(
     rating: Int,
-    onRatingChanged: (Int) -> Unit,
+    onRatingChanged: (Int) -> Unit = {},
+    enabled: Boolean = true,
     isError: Boolean = false,
     errorMessage: String? = null
 ) {
@@ -43,7 +44,7 @@ fun StarRating(
 
                     contentDescription = "Estrella $i",
 
-                    modifier = Modifier.clickable {
+                    modifier = Modifier.clickable(enabled = enabled) {
                         onRatingChanged(i)
                     }
                 )

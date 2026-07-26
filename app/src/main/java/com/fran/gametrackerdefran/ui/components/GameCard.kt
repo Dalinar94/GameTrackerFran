@@ -16,9 +16,6 @@ import com.fran.gametrackerdefran.data.model.Game
 import com.fran.gametrackerdefran.ui.theme.GTElevation
 import com.fran.gametrackerdefran.ui.theme.GTRadius
 import com.fran.gametrackerdefran.ui.theme.GTSpacing
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.outlined.FavoriteBorder
-import androidx.compose.material3.IconButton
 import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.ui.layout.ContentScale
 import coil.compose.AsyncImage
