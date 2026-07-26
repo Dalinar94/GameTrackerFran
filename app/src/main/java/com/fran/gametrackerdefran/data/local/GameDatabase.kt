@@ -9,7 +9,7 @@ import com.fran.gametrackerdefran.data.model.Game
 
 @Database(
     entities = [Game::class],
-    version = 1,
+    version = 4,
     exportSchema = false
 )
 @TypeConverters(GameConverters::class)
@@ -30,7 +30,9 @@ abstract class GameDatabase : RoomDatabase() {
                     context.applicationContext,
                     GameDatabase::class.java,
                     "game_database"
-                ).build()
+                )
+                    .fallbackToDestructiveMigration()
+                    .build()
 
                 INSTANCE = instance
 

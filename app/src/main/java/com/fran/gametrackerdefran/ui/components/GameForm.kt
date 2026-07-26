@@ -12,6 +12,9 @@ import com.fran.gametrackerdefran.validation.GameFormValidator
 import com.fran.gametrackerdefran.data.model.GameFormErrors
 import com.fran.gametrackerdefran.data.model.Game
 import com.fran.gametrackerdefran.ui.viewmodel.GameViewModel
+import com.fran.gametrackerdefran.utils.getCurrentDate
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 @Composable
 fun GameForm(
     gameViewModel: GameViewModel,
@@ -31,18 +34,33 @@ fun GameForm(
                     horas = game.horas.toString(),
                     rating = game.rating,
                     comentario = game.comentario,
-                    estado = game.estado
+                    estado = game.estado,
+                    fechaCompletado = game.fechaCompletado ?: "",
+                    portadaUri = game.portadaUri ?: ""
                 )
             }
         )
     }
+
+    val scrollState = rememberScrollState()
+
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .verticalScroll(scrollState)
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)
-
     ) {
+        CoverPicker(
+            imageUri = formState.portadaUri,
+            onImageSelected = { uri ->
+                formState = formState.copy(
+                    portadaUri = uri
+                )
+            }
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
 
         OutlinedTextField(
             value = formState.nombre,
@@ -95,16 +113,43 @@ fun GameForm(
             options = estados,
             selectedOption = formState.estado,
             optionLabel = { it.displayName },
-            onOptionSelected = {
+            onOptionSelected = { nuevoEstado ->
+
                 formState = formState.copy(
-                    estado = it
+                    estado = nuevoEstado,
+
+                    fechaCompletado =
+                        when {
+
+                            nuevoEstado != com.fran.gametrackerdefran.data.model.GameStatus.COMPLETADO ->
+                                ""
+
+                            formState.fechaCompletado.isBlank() ->
+                                getCurrentDate()
+
+                            else ->
+                                formState.fechaCompletado
+                        }
+
                 )
+
             },
             isError = errors.estado != null,
             errorMessage = errors.estado
         )
-        Text("Valoración")
 
+        if (formState.estado == com.fran.gametrackerdefran.data.model.GameStatus.COMPLETADO) {
+
+            CompletionDateField(
+                date = formState.fechaCompletado,
+                onClick = {
+                    // De momento no hace nada.
+                    // En el siguiente paso abriremos aquí el calendario.
+                }
+            )
+
+        }
+        Text("Valoración")
         StarRating(
 
             rating = formState.rating,
@@ -141,7 +186,9 @@ fun GameForm(
                         horas = formState.horas,
                         rating = formState.rating,
                         comentario =formState.comentario,
-                        estado = formState.estado
+                        estado = formState.estado,
+                        fechaCompletado = formState.fechaCompletado,
+                        portadaUri = formState.portadaUri
                     )
 
                     val result = GameFormValidator.validate(form)
@@ -157,7 +204,10 @@ fun GameForm(
                         horas = formState.horas.toInt(),
                         rating = formState.rating,
                         comentario = formState.comentario,
-                        estado = formState.estado!!
+                        estado = formState.estado!!,
+                        favorito = game?.favorito ?: false,
+                        fechaCompletado = formState.fechaCompletado.ifBlank { null },
+                        portadaUri = formState.portadaUri.ifBlank { null }
                     )
 
                     if (game == null) {

@@ -16,11 +16,18 @@ import com.fran.gametrackerdefran.data.model.Game
 import com.fran.gametrackerdefran.ui.theme.GTElevation
 import com.fran.gametrackerdefran.ui.theme.GTRadius
 import com.fran.gametrackerdefran.ui.theme.GTSpacing
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.outlined.FavoriteBorder
+import androidx.compose.material3.IconButton
+import androidx.compose.material.icons.filled.CalendarMonth
+import androidx.compose.ui.layout.ContentScale
+import coil.compose.AsyncImage
 
 @Composable
 fun GameCard(
     game: Game,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    onFavoriteClick: () -> Unit
 ) {
 
     Card(
@@ -54,16 +61,29 @@ fun GameCard(
                 )
             ) {
 
-                Box(
-                    modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center
-                ) {
+                if (!game.portadaUri.isNullOrBlank()) {
 
-                    Icon(
-                        imageVector = Icons.Default.SportsEsports,
-                        contentDescription = null,
-                        modifier = Modifier.size(36.dp)
+                    AsyncImage(
+                        model = game.portadaUri,
+                        contentDescription = game.nombre,
+                        modifier = Modifier.fillMaxSize(),
+                        contentScale = ContentScale.Crop
                     )
+
+                } else {
+
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+
+                        Icon(
+                            imageVector = Icons.Default.SportsEsports,
+                            contentDescription = null,
+                            modifier = Modifier.size(36.dp)
+                        )
+
+                    }
 
                 }
 
@@ -75,14 +95,25 @@ fun GameCard(
             Column(
                 modifier = Modifier.weight(1f)
             ) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.Top
+                ) {
 
-                // Cabecera
-                Text(
-                    text = game.nombre,
-                    style = MaterialTheme.typography.titleLarge,
-                    maxLines = 3,
-                    overflow = TextOverflow.Ellipsis
-                )
+                    Text(
+                        text = game.nombre,
+                        style = MaterialTheme.typography.titleLarge,
+                        maxLines = 3,
+                        overflow = TextOverflow.Ellipsis,
+                        modifier = Modifier.weight(1f)
+                    )
+
+                    FavoriteButton(
+                        isFavorite = game.favorito,
+                        onClick = onFavoriteClick
+                    )
+
+                }
 
                 Spacer(modifier = Modifier.height(GTSpacing.Small))
 
@@ -112,6 +143,22 @@ fun GameCard(
                     label = "Horas",
                     value = "${game.horas} h"
                 )
+                if (!game.fechaCompletado.isNullOrBlank()) {
+
+                    Spacer(modifier = Modifier.height(GTSpacing.Small))
+
+                    InfoRow(
+                        icon = {
+                            Icon(
+                                imageVector = Icons.Default.CalendarMonth,
+                                contentDescription = null
+                            )
+                        },
+                        label = "Finalizado",
+                        value = game.fechaCompletado
+                    )
+
+                }
 
                 Spacer(modifier = Modifier.height(GTSpacing.Medium))
 

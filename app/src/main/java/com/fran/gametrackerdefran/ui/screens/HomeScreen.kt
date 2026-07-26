@@ -108,6 +108,9 @@ fun HomeScreen( navController: NavController,
                             navController.navigate(
                                 Screen.EditGame.createRoute(juego.id)
                             )
+                        },
+                        onFavoriteClick = {
+                            gameViewModel.toggleFavorite(juego)
                         }
                     )
 

@@ -11,5 +11,8 @@ data class Game(
     val horas: Int,
     val rating: Int,
     val comentario: String,
-    val estado: GameStatus
+    val estado: GameStatus,
+    val favorito: Boolean = false,
+    val fechaCompletado: String? = null,
+    val portadaUri: String? = null
 )

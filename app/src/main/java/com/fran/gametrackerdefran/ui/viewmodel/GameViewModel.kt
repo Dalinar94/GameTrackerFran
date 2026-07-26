@@ -138,6 +138,16 @@ class GameViewModel(
         }
     }
 
+    fun toggleFavorite(game: Game) {
+        viewModelScope.launch {
+            repository.updateGame(
+                game.copy(
+                    favorito = !game.favorito
+                )
+            )
+        }
+    }
+
     fun deleteGame(game: Game) {
         viewModelScope.launch {
             repository.deleteGame(game)

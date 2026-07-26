@@ -12,6 +12,10 @@ data class GameFormState(
 
     val estado: GameStatus? = null,
 
-    val comentario: String = ""
+    val comentario: String = "",
+
+    val fechaCompletado: String = "",
+
+    val portadaUri: String = ""
 
 )
