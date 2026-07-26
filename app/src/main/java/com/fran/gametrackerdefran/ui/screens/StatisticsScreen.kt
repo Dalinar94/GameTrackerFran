@@ -15,6 +15,7 @@ import com.fran.gametrackerdefran.ui.components.AppTopBar
 import com.fran.gametrackerdefran.ui.components.StatisticCard
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.fran.gametrackerdefran.ui.components.DistributionRow
+import com.fran.gametrackerdefran.ui.components.PlatformDistributionRow
 import com.fran.gametrackerdefran.ui.components.StatisticRow
 import com.fran.gametrackerdefran.ui.components.StatisticsSection
 import com.fran.gametrackerdefran.ui.model.Statistic
@@ -141,9 +142,14 @@ fun StatisticsScreen(navController: NavController, gameViewModel: GameViewModel)
 
                     gameViewModel.gamesByPlatform.forEach { (platform, count) ->
 
-                        DistributionRow(
-                            label = platform,
-                            value = count
+                        PlatformDistributionRow(
+                            platform = platform,
+                            value = count,
+                            progress = if (gameViewModel.totalGames == 0) {
+                                0f
+                            } else {
+                                count.toFloat() / gameViewModel.totalGames
+                            }
                         )
 
                     }
