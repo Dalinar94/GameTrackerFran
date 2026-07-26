@@ -11,13 +11,16 @@ import com.fran.gametrackerdefran.ui.navigation.AppNavigation
 import com.fran.gametrackerdefran.ui.theme.GameTrackerDeFranTheme
 import com.fran.gametrackerdefran.ui.viewmodel.GameViewModel
 import com.fran.gametrackerdefran.ui.viewmodel.GameViewModelFactory
-
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
 
+        installSplashScreen()   // ✅ Aquí sí
+
+        super.onCreate(savedInstanceState)
+
+        enableEdgeToEdge()
         setContent {
 
             val database = GameDatabase.getDatabase(applicationContext)

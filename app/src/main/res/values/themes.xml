@@ -1,5 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Theme.GameTrackerDeFran" parent="android:Theme.Material.Light.NoActionBar" />
+    <!-- Tema de la Splash Screen -->
+    <style name="Theme.GameTrackerDeFran.Splash" parent="Theme.SplashScreen">
+
+        <!-- Color de fondo -->
+        <item name="windowSplashScreenBackground">#0F172A</item>
+
+        <!-- Icono que aparecerá -->
+        <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher</item>
+
+        <!-- Tema que usará la app después -->
+        <item name="postSplashScreenTheme">@style/Theme.GameTrackerDeFran</item>
+
+    </style>
+
+    <!-- Tema principal -->
+    <style name="Theme.GameTrackerDeFran"
+        parent="android:Theme.Material.Light.NoActionBar" />
+
 </resources>
