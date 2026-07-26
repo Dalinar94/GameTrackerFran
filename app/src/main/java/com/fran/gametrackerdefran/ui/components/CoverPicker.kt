@@ -18,18 +18,28 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.fran.gametrackerdefran.ui.theme.GTRadius
 import coil.compose.AsyncImage
+import androidx.compose.ui.platform.LocalContext
+import com.fran.gametrackerdefran.storage.copyImageToInternalStorage
+
 @Composable
 fun CoverPicker(
     imageUri: String,
     onImageSelected: (String) -> Unit
 ) {
-
+    val context = LocalContext.current
     val launcher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
     ) { uri: Uri? ->
 
         uri?.let {
-            onImageSelected(it.toString())
+
+            val imagePath = copyImageToInternalStorage(
+                context,
+                it
+            )
+
+            onImageSelected(imagePath)
+
         }
 
     }
@@ -48,7 +58,7 @@ fun CoverPicker(
             if (imageUri.isNotBlank()) {
 
                 AsyncImage(
-                    model = imageUri,
+                    model = java.io.File(imageUri),
                     contentDescription = "Portada",
                     modifier = Modifier.fillMaxSize(),
                     contentScale = ContentScale.Crop

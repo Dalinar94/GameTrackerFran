@@ -64,7 +64,7 @@ fun GameCard(
                 if (!game.portadaUri.isNullOrBlank()) {
 
                     AsyncImage(
-                        model = game.portadaUri,
+                        model = java.io.File(game.portadaUri),
                         contentDescription = game.nombre,
                         modifier = Modifier.fillMaxSize(),
                         contentScale = ContentScale.Crop
@@ -123,13 +123,22 @@ fun GameCard(
 
                 Spacer(modifier = Modifier.height(GTSpacing.Medium))
 
-                InfoRow(
-                    icon = {
-                        LibraryIcon(game.plataforma)
-                    },
-                    label = "Biblioteca",
-                    value = game.plataforma
-                )
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+
+                    LibraryIcon(
+                        library = game.plataforma,
+                        modifier = Modifier.size(22.dp)
+                    )
+
+                    Spacer(modifier = Modifier.width(8.dp))
+
+                    Text(
+                        text = game.plataforma,
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                }
 
                 Spacer(modifier = Modifier.height(GTSpacing.Small))
 
