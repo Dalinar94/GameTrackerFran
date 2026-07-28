@@ -22,6 +22,8 @@ import com.fran.gametrackerdefran.ui.components.SearchBar
 import com.fran.gametrackerdefran.ui.components.SortMenu
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.material.icons.filled.Settings
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen( navController: NavController,
@@ -29,7 +31,6 @@ fun HomeScreen( navController: NavController,
     val games by gameViewModel.games.collectAsState()
 
     Scaffold(
-
         topBar = {
             AppTopBar(
                 title = "GameTracker",
@@ -46,6 +47,16 @@ fun HomeScreen( navController: NavController,
                             contentDescription = "Estadísticas"
                         )
 
+                    }
+                    IconButton(
+                        onClick = {
+                            navController.navigate(Screen.Settings.route)
+                        }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Settings,
+                            contentDescription = "Ajustes"
+                        )
                     }
 
                 }
@@ -78,6 +89,7 @@ fun HomeScreen( navController: NavController,
                 )
 
             }
+
             item {
                 SortMenu(
                     selectedSort = gameViewModel.selectedSort,

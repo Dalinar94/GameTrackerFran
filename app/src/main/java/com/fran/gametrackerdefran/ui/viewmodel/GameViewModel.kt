@@ -13,6 +13,10 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import com.fran.gametrackerdefran.utils.backup.BackupManager
+import android.content.Context
+import java.io.File
+
 
 class GameViewModel(
     private val repository: GameRepository
@@ -166,5 +170,36 @@ class GameViewModel(
     }
     fun findGameById(id: Int): Game? {
         return games.value.find { it.id == id }
+    }
+
+    fun exportGamesToJson(): String {
+        return BackupManager.exportToJson(games.value)
+    }
+
+    fun exportBackup(context: Context): File {
+
+        val json = BackupManager.exportToJson(games.value)
+
+        return BackupManager.saveToFile(
+            context = context,
+            json = json
+        )
+
+    }
+    fun testImport(): List<Game> {
+
+        val json = BackupManager.exportToJson(games.value)
+
+        return BackupManager.importFromJson(json)
+
+    }
+    fun replaceAllGames(games: List<Game>) {
+
+        viewModelScope.launch {
+
+            repository.replaceAllGames(games)
+
+        }
+
     }
 }

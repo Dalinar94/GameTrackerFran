@@ -24,4 +24,8 @@ class GameRepository(
     suspend fun getGameById(id: Int): Game? {
         return gameDao.getGameById(id)
     }
+    suspend fun replaceAllGames(games: List<Game>) {
+        gameDao.deleteAll()
+        gameDao.insertGames(games)
+    }
 }

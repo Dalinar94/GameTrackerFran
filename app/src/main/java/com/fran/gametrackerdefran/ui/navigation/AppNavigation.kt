@@ -10,6 +10,7 @@ import com.fran.gametrackerdefran.ui.screens.AddGameScreen
 import com.fran.gametrackerdefran.ui.screens.EditGameScreen
 import com.fran.gametrackerdefran.ui.screens.GameDetailScreen
 import com.fran.gametrackerdefran.ui.screens.HomeScreen
+import com.fran.gametrackerdefran.ui.screens.SettingsScreen
 import com.fran.gametrackerdefran.ui.screens.StatisticsScreen
 import com.fran.gametrackerdefran.ui.viewmodel.GameViewModel
 @Composable
@@ -70,6 +71,12 @@ fun AppNavigation(gameViewModel: GameViewModel ) {
             )
         }
 
+        composable(Screen.Settings.route) {
+            SettingsScreen(
+                navController = navController,
+                gameViewModel = gameViewModel
+            )
+        }
         composable(
             route = Screen.EditGame.route,
             arguments = listOf(
