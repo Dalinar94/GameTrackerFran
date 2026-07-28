@@ -22,6 +22,13 @@ sealed class Screen(val route: String) {
 
     }
     object AddWishlistGame : Screen("add_wishlist_game")
+    object EditWishlistGame : Screen("editWishlistGame/{wishlistGameId}") {
+
+        fun createRoute(wishlistGameId: Int): String {
+            return "editWishlistGame/$wishlistGameId"
+        }
+
+    }
     object Settings : Screen("settings")
     object Wishlist : Screen("wishlist")
     data object Statistics : Screen("statistics")

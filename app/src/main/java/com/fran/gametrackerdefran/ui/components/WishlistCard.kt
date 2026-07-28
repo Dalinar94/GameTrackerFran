@@ -21,12 +21,13 @@ import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.TextButton
-
+import androidx.compose.material.icons.filled.Edit
 @Composable
 fun WishlistCard(
     game: WishlistGame,
     onDelete: () -> Unit,
-    onMoveToLibrary: () -> Unit
+    onMoveToLibrary: () -> Unit,
+    onEdit: () -> Unit
 ){
 
     Card(
@@ -83,7 +84,14 @@ fun WishlistCard(
                     ) {
                         Text("Ya lo tengo")
                     }
-
+                    IconButton(
+                        onClick = onEdit
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Edit,
+                            contentDescription = "Editar"
+                        )
+                    }
                     IconButton(
                         onClick = onDelete
                     ) {

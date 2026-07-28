@@ -19,16 +19,31 @@ import com.fran.gametrackerdefran.ui.components.AppTopBar
 import com.fran.gametrackerdefran.ui.components.CoverPicker
 import com.fran.gametrackerdefran.ui.components.DropdownField
 import com.fran.gametrackerdefran.ui.viewmodel.GameViewModel
-
+import androidx.compose.runtime.collectAsState
 @Composable
 fun AddWishlistGameScreen(
     navController: NavController,
-    gameViewModel: GameViewModel
+    gameViewModel: GameViewModel,
+    wishlistGameId: Int? = null
 ) {
 
     var title by remember { mutableStateOf("") }
     var platform by remember { mutableStateOf("") }
     var coverImageUri by remember { mutableStateOf("") }
+    val wishlistGame by remember(wishlistGameId) {
+        if (wishlistGameId != null) {
+            gameViewModel.getWishlistGameById(wishlistGameId)
+        } else {
+            null
+        }
+    }?.collectAsState(initial = null) ?: remember { mutableStateOf(null) }
+    LaunchedEffect(wishlistGame) {
+        wishlistGame?.let { game ->
+            title = game.title
+            platform = game.platform
+            coverImageUri = game.coverImageUri.orEmpty()
+        }
+    }
     Scaffold(
         topBar = {
             AppTopBar(
@@ -78,19 +93,39 @@ fun AddWishlistGameScreen(
 
                     if (title.isNotBlank() && platform.isNotBlank()) {
 
-                        gameViewModel.insertWishlistGame(
-                            WishlistGame(
-                                title = title,
-                                platform = platform,
-                                coverImageUri = coverImageUri.ifBlank { null }
+                        if (wishlistGame == null) {
+
+                            gameViewModel.insertWishlistGame(
+                                WishlistGame(
+                                    title = title.trim(),
+                                    platform = platform.trim(),
+                                    coverImageUri = coverImageUri.ifBlank { null }
+                                )
                             )
-                        )
+
+                        } else {
+
+                            gameViewModel.updateWishlistGame(
+                                wishlistGame!!.copy(
+                                    title = title.trim(),
+                                    platform = platform.trim(),
+                                    coverImageUri = coverImageUri.ifBlank { null }
+                                )
+                            )
+
+                        }
 
                         navController.popBackStack()
                     }
                 }
             ) {
-                Text("Guardar")
+                Text(
+                    if (wishlistGame == null) {
+                        "Guardar"
+                    } else {
+                        "Actualizar"
+                    }
+                )
             }
         }
     }

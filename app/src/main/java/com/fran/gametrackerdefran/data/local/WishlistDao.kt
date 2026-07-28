@@ -10,6 +10,9 @@ interface WishlistDao {
     @Query("SELECT * FROM wishlist_games ORDER BY title ASC")
     fun getAllWishlistGames(): Flow<List<WishlistGame>>
 
+    @Query("SELECT * FROM wishlist_games WHERE id = :id")
+    fun getWishlistGameById(id: Int): Flow<WishlistGame?>
+
     @Insert
     suspend fun insertWishlistGame(game: WishlistGame)
 

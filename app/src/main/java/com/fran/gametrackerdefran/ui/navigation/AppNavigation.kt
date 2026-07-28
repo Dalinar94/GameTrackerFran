@@ -85,11 +85,31 @@ fun AppNavigation(gameViewModel: GameViewModel ) {
                 gameViewModel = gameViewModel
             )
         }
+
         composable(Screen.AddWishlistGame.route) {
             AddWishlistGameScreen(
                 navController = navController,
                 gameViewModel = gameViewModel
             )
+        }
+        composable(
+            route = Screen.EditWishlistGame.route,
+            arguments = listOf(
+                navArgument("wishlistGameId") {
+                    type = NavType.IntType
+                }
+            )
+        ) { backStackEntry ->
+
+            val wishlistGameId =
+                backStackEntry.arguments?.getInt("wishlistGameId") ?: 0
+
+            AddWishlistGameScreen(
+                navController = navController,
+                gameViewModel = gameViewModel,
+                wishlistGameId = wishlistGameId
+            )
+
         }
         composable(
             route = Screen.EditGame.route,

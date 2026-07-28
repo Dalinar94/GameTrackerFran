@@ -224,6 +224,9 @@ class GameViewModel(
         }
     }
 
+    fun getWishlistGameById(id: Int) =
+        wishlistRepository.getWishlistGameById(id)
+
     fun moveWishlistGameToLibrary(
         wishlistGame: WishlistGame
     ) {
