@@ -15,18 +15,24 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import com.fran.gametrackerdefran.utils.backup.BackupManager
 import android.content.Context
+import android.util.Log
 import com.fran.gametrackerdefran.data.entity.WishlistGame
+import com.fran.gametrackerdefran.data.remote.RawgGame
 import com.fran.gametrackerdefran.data.repository.WishlistRepository
 import java.io.File
-
+import com.fran.gametrackerdefran.data.repository.RawgRepository
 
 class GameViewModel(
     private val repository: GameRepository,
-    private val wishlistRepository: WishlistRepository
+    private val wishlistRepository: WishlistRepository,
+    private val rawgRepository: RawgRepository
 ) : ViewModel() {
 
     private val _games = MutableStateFlow<List<Game>>(emptyList())
     val games: StateFlow<List<Game>> = _games
+
+    private val _searchResults = MutableStateFlow<List<RawgGame>>(emptyList())
+    val searchResults: StateFlow<List<RawgGame>> = _searchResults
     val allWishlistGames = wishlistRepository.allWishlistGames
 
     init {
@@ -247,5 +253,33 @@ class GameViewModel(
 
         deleteWishlistGame(wishlistGame)
 
+    }
+    fun searchGames(query: String) {
+
+        if (query.isBlank()) {
+            _searchResults.value = emptyList()
+            return
+        }
+
+        viewModelScope.launch {
+
+            try {
+
+                val games = rawgRepository.searchGames(query)
+
+                Log.d("RAWG_RESULTS", "Tamaño = ${games.size}")
+
+                games.forEach {
+                    Log.d("RAWG_GAME", it.name)
+                }
+
+                _searchResults.value = games
+
+            } catch (e: Exception) {
+                Log.e("RAWG", "Error buscando juegos", e)
+                _searchResults.value = emptyList()
+            }
+
+        }
     }
 }

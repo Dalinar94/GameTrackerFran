@@ -1,9 +1,14 @@
+import org.gradle.kotlin.dsl.java
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.ksp)
 }
-
+val localProperties = Properties().apply {
+    load(rootProject.file("local.properties").inputStream())
+}
 android {
     namespace = "com.fran.gametrackerdefran"
     compileSdk {
@@ -21,7 +26,7 @@ android {
         buildConfigField(
             "String",
             "RAWG_API_KEY",
-            "\"${project.findProperty("RAWG_API_KEY")}\""
+            "\"${localProperties.getProperty("RAWG_API_KEY")}\""
         )
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -57,6 +62,7 @@ dependencies {
     implementation("androidx.navigation:navigation-compose:2.9.0")
     implementation("androidx.core:core-splashscreen:1.0.1")
     implementation("com.google.code.gson:gson:2.13.1")
+    implementation(libs.okhttp.logging)
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
     implementation(libs.coil.compose)

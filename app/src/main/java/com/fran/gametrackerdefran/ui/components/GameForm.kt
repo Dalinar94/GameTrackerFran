@@ -77,7 +77,14 @@ fun GameForm(
                 }
             }
         )
-
+        Button(
+            onClick = {
+                gameViewModel.searchGames(formState.nombre)
+            },
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text("Buscar en RAWG")
+        }
         DropdownField(
             label = "Biblioteca",
             options = plataformas,

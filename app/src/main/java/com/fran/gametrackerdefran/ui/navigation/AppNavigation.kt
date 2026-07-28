@@ -15,6 +15,7 @@ import com.fran.gametrackerdefran.ui.screens.SettingsScreen
 import com.fran.gametrackerdefran.ui.screens.StatisticsScreen
 import com.fran.gametrackerdefran.ui.screens.WishlistScreen
 import com.fran.gametrackerdefran.ui.viewmodel.GameViewModel
+import com.fran.gametrackerdefran.ui.screens.RawgTestScreen
 @Composable
 fun AppNavigation(gameViewModel: GameViewModel ) {
 
@@ -23,7 +24,7 @@ fun AppNavigation(gameViewModel: GameViewModel ) {
     NavHost(
         navController = navController,
         startDestination = Screen.Home.route
-    ) {
+    ){
 
         composable(Screen.Home.route) {
             HomeScreen(
@@ -130,7 +131,11 @@ fun AppNavigation(gameViewModel: GameViewModel ) {
             )
 
         }
-
+        composable("rawg_test") {
+            RawgTestScreen(
+                gameViewModel = gameViewModel
+            )
+        }
     }
 
 }

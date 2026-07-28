@@ -13,7 +13,7 @@ import com.fran.gametrackerdefran.ui.viewmodel.GameViewModel
 import com.fran.gametrackerdefran.ui.viewmodel.GameViewModelFactory
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.fran.gametrackerdefran.data.repository.WishlistRepository
-
+import com.fran.gametrackerdefran.data.repository.RawgRepository
 class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -28,7 +28,12 @@ class MainActivity : ComponentActivity() {
             val database = GameDatabase.getDatabase(applicationContext)
             val repository = GameRepository(database.gameDao())
             val wishlistRepository = WishlistRepository(database.wishlistDao())
-            val factory = GameViewModelFactory(repository,wishlistRepository)
+            val rawgRepository = RawgRepository()
+            val factory = GameViewModelFactory(
+                repository,
+                wishlistRepository,
+                rawgRepository
+            )
 
             val gameViewModel: GameViewModel = viewModel(
                 factory = factory
