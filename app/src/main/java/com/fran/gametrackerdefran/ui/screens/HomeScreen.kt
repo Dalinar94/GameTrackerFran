@@ -16,6 +16,7 @@ import com.fran.gametrackerdefran.ui.viewmodel.GameViewModel
 import com.fran.gametrackerdefran.ui.components.EmptyGames
 import com.fran.gametrackerdefran.ui.components.StatusFilterBar
 import androidx.compose.material.icons.filled.BarChart
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import com.fran.gametrackerdefran.ui.components.SearchBar
@@ -47,6 +48,16 @@ fun HomeScreen( navController: NavController,
                             contentDescription = "Estadísticas"
                         )
 
+                    }
+                    IconButton(
+                        onClick = {
+                            navController.navigate(Screen.Wishlist.route)
+                        }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Favorite,
+                            contentDescription = "Lista de deseos"
+                        )
                     }
                     IconButton(
                         onClick = {

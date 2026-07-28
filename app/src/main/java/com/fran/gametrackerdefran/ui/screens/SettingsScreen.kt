@@ -37,7 +37,6 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class)
@@ -81,16 +80,27 @@ fun SettingsScreen(
     ) { uri ->
 
         if (uri != null) {
+            try {
 
-            val json = BackupManager.readJsonFromUri(
-                context = context,
-                uri = uri
-            )
+                val json = BackupManager.readJsonFromUri(
+                    context = context,
+                    uri = uri
+                )
 
-            val games = BackupManager.importFromJson(json)
+                val games = BackupManager.importFromJson(json)
 
-            gameViewModel.replaceAllGames(games)
-            navController.popBackStack()
+                gameViewModel.replaceAllGames(games)
+
+                navController.popBackStack()
+
+            } catch (e: Exception) {
+
+                scope.launch {
+                    snackbarHostState.showSnackbar(
+                        "No se ha podido importar la copia de seguridad."
+                    )
+                }
+            }
         }
     }
     Scaffold(

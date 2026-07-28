@@ -12,6 +12,8 @@ import com.fran.gametrackerdefran.ui.theme.GameTrackerDeFranTheme
 import com.fran.gametrackerdefran.ui.viewmodel.GameViewModel
 import com.fran.gametrackerdefran.ui.viewmodel.GameViewModelFactory
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import com.fran.gametrackerdefran.data.repository.WishlistRepository
+
 class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -25,7 +27,8 @@ class MainActivity : ComponentActivity() {
 
             val database = GameDatabase.getDatabase(applicationContext)
             val repository = GameRepository(database.gameDao())
-            val factory = GameViewModelFactory(repository)
+            val wishlistRepository = WishlistRepository(database.wishlistDao())
+            val factory = GameViewModelFactory(repository,wishlistRepository)
 
             val gameViewModel: GameViewModel = viewModel(
                 factory = factory

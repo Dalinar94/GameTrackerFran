@@ -22,5 +22,6 @@ sealed class Screen(val route: String) {
 
     }
     object Settings : Screen("settings")
+    object Wishlist : Screen("wishlist")
     data object Statistics : Screen("statistics")
 }

@@ -6,15 +6,19 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.fran.gametrackerdefran.data.model.Game
+import com.fran.gametrackerdefran.data.entity.WishlistGame
 
 @Database(
-    entities = [Game::class],
-    version = 4,
+    entities = [
+        Game::class,
+        WishlistGame::class
+    ],
+    version = 5,
     exportSchema = false
 )
 @TypeConverters(GameConverters::class)
 abstract class GameDatabase : RoomDatabase() {
-
+    abstract fun wishlistDao(): WishlistDao
     abstract fun gameDao(): GameDao
 
     companion object {

@@ -15,15 +15,19 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import com.fran.gametrackerdefran.utils.backup.BackupManager
 import android.content.Context
+import com.fran.gametrackerdefran.data.entity.WishlistGame
+import com.fran.gametrackerdefran.data.repository.WishlistRepository
 import java.io.File
 
 
 class GameViewModel(
-    private val repository: GameRepository
+    private val repository: GameRepository,
+    private val wishlistRepository: WishlistRepository
 ) : ViewModel() {
 
     private val _games = MutableStateFlow<List<Game>>(emptyList())
     val games: StateFlow<List<Game>> = _games
+    val allWishlistGames = wishlistRepository.allWishlistGames
 
     init {
         viewModelScope.launch {
@@ -201,5 +205,22 @@ class GameViewModel(
 
         }
 
+    }
+    fun insertWishlistGame(game: WishlistGame) {
+        viewModelScope.launch {
+            wishlistRepository.insert(game)
+        }
+    }
+
+    fun updateWishlistGame(game: WishlistGame) {
+        viewModelScope.launch {
+            wishlistRepository.update(game)
+        }
+    }
+
+    fun deleteWishlistGame(game: WishlistGame) {
+        viewModelScope.launch {
+            wishlistRepository.delete(game)
+        }
     }
 }
