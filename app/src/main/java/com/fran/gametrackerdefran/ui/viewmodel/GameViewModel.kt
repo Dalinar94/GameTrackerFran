@@ -223,4 +223,26 @@ class GameViewModel(
             wishlistRepository.delete(game)
         }
     }
+
+    fun moveWishlistGameToLibrary(
+        wishlistGame: WishlistGame
+    ) {
+
+        val game = Game(
+            nombre = wishlistGame.title,
+            plataforma = wishlistGame.platform,
+            horas = 0,
+            rating = 0,
+            comentario = "",
+            estado = GameStatus.PENDIENTE,
+            favorito = false,
+            fechaCompletado = null,
+            portadaUri = wishlistGame.coverImageUri
+        )
+
+        addGame(game)
+
+        deleteWishlistGame(wishlistGame)
+
+    }
 }

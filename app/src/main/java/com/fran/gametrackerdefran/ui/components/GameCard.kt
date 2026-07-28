@@ -1,12 +1,24 @@
 package com.fran.gametrackerdefran.ui.components
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.filled.Schedule
-import androidx.compose.material.icons.filled.SportsEsports
-import androidx.compose.material3.*
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -16,9 +28,6 @@ import com.fran.gametrackerdefran.data.model.Game
 import com.fran.gametrackerdefran.ui.theme.GTElevation
 import com.fran.gametrackerdefran.ui.theme.GTRadius
 import com.fran.gametrackerdefran.ui.theme.GTSpacing
-import androidx.compose.material.icons.filled.CalendarMonth
-import androidx.compose.ui.layout.ContentScale
-import coil.compose.AsyncImage
 
 @Composable
 fun GameCard(
@@ -47,44 +56,11 @@ fun GameCard(
                 .padding(GTSpacing.Large)
         ) {
 
-            // Portada (placeholder)
-            Card(
-                modifier = Modifier
-                    .width(80.dp)
-                    .height(120.dp),
-                shape = RoundedCornerShape(GTRadius.Medium),
-                elevation = CardDefaults.cardElevation(
-                    defaultElevation = GTElevation.Card
-                )
-            ) {
-
-                if (!game.portadaUri.isNullOrBlank()) {
-
-                    AsyncImage(
-                        model = java.io.File(game.portadaUri),
-                        contentDescription = game.nombre,
-                        modifier = Modifier.fillMaxSize(),
-                        contentScale = ContentScale.Crop
-                    )
-
-                } else {
-
-                    Box(
-                        modifier = Modifier.fillMaxSize(),
-                        contentAlignment = Alignment.Center
-                    ) {
-
-                        Icon(
-                            imageVector = Icons.Default.SportsEsports,
-                            contentDescription = null,
-                            modifier = Modifier.size(36.dp)
-                        )
-
-                    }
-
-                }
-
-            }
+            // Portada
+            GameCover(
+                imageUri = game.portadaUri,
+                contentDescription = game.nombre
+            )
 
             Spacer(modifier = Modifier.width(GTSpacing.Medium))
 

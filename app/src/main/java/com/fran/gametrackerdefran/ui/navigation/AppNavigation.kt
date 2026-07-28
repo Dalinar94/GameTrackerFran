@@ -7,6 +7,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.fran.gametrackerdefran.ui.screens.AddGameScreen
+import com.fran.gametrackerdefran.ui.screens.AddWishlistGameScreen
 import com.fran.gametrackerdefran.ui.screens.EditGameScreen
 import com.fran.gametrackerdefran.ui.screens.GameDetailScreen
 import com.fran.gametrackerdefran.ui.screens.HomeScreen
@@ -80,6 +81,12 @@ fun AppNavigation(gameViewModel: GameViewModel ) {
         }
         composable(Screen.Wishlist.route) {
             WishlistScreen(
+                navController = navController,
+                gameViewModel = gameViewModel
+            )
+        }
+        composable(Screen.AddWishlistGame.route) {
+            AddWishlistGameScreen(
                 navController = navController,
                 gameViewModel = gameViewModel
             )
