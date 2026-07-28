@@ -33,7 +33,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.unit.dp
-
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(
@@ -41,6 +47,8 @@ fun SettingsScreen(
     gameViewModel: GameViewModel
 
 ) {
+    val snackbarHostState = remember { SnackbarHostState() }
+    val scope = rememberCoroutineScope()
     val context = LocalContext.current
     var showImportDialog by remember {
         mutableStateOf(false)
@@ -61,6 +69,11 @@ fun SettingsScreen(
                 uri = uri,
                 json = json
             )
+            scope.launch {
+                snackbarHostState.showSnackbar(
+                    "Copia de seguridad creada correctamente."
+                )
+            }
         }
     }
     val importLauncher = rememberLauncherForActivityResult(
@@ -81,6 +94,7 @@ fun SettingsScreen(
         }
     }
     Scaffold(
+
         topBar = {
             AppTopBar(
                 title = "Ajustes",
@@ -89,7 +103,11 @@ fun SettingsScreen(
                     navController.popBackStack()
                 }
             )
-        }
+        },
+        snackbarHost = {
+            SnackbarHost(hostState = snackbarHostState)
+        },
+
     ) { padding ->
 
         Column(
@@ -123,7 +141,13 @@ fun SettingsScreen(
                     )
                 },
                 modifier = Modifier.clickable {
-                    exportLauncher.launch("gametracker_backup.json")
+
+                    val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm")
+
+                    val fileName = "gametracker_backup_${LocalDateTime.now().format(formatter)}.json"
+
+                    exportLauncher.launch(fileName)
+
                 }
             )
 
