@@ -62,6 +62,7 @@ dependencies {
     implementation("androidx.navigation:navigation-compose:2.9.0")
     implementation("androidx.core:core-splashscreen:1.0.1")
     implementation("com.google.code.gson:gson:2.13.1")
+    implementation("io.coil-kt:coil-compose:...")
     implementation(libs.okhttp.logging)
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)

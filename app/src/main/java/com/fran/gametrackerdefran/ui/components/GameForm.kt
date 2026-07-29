@@ -15,6 +15,10 @@ import com.fran.gametrackerdefran.ui.viewmodel.GameViewModel
 import com.fran.gametrackerdefran.utils.getCurrentDate
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import coil.compose.AsyncImage
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.unit.dp
+import androidx.compose.foundation.shape.RoundedCornerShape
 @Composable
 fun GameForm(
     gameViewModel: GameViewModel,
@@ -43,7 +47,7 @@ fun GameForm(
     }
 
     val scrollState = rememberScrollState()
-
+    val searchResults by gameViewModel.searchResults.collectAsState()
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -51,16 +55,19 @@ fun GameForm(
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        CoverPicker(
-            imageUri = formState.portadaUri,
-            onImageSelected = { uri ->
-                formState = formState.copy(
-                    portadaUri = uri
-                )
-            }
-        )
+        if (formState.portadaUri.isNotBlank()) {
 
-        Spacer(modifier = Modifier.height(8.dp))
+            AsyncImage(
+                model = formState.portadaUri,
+                contentDescription = "Portada del juego",
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(220.dp),
+                contentScale = ContentScale.Crop
+            )
+
+            Spacer(modifier = Modifier.height(8.dp))
+        }
 
         OutlinedTextField(
             value = formState.nombre,
@@ -77,6 +84,7 @@ fun GameForm(
                 }
             }
         )
+
         Button(
             onClick = {
                 gameViewModel.searchGames(formState.nombre)
@@ -85,6 +93,59 @@ fun GameForm(
         ) {
             Text("Buscar en RAWG")
         }
+
+        if (searchResults.isNotEmpty()) {
+
+            Text(
+                text = "Resultados RAWG",
+                style = MaterialTheme.typography.titleMedium
+            )
+
+            searchResults.take(5).forEach { game ->
+
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 4.dp),
+                    onClick = {
+
+                        formState = formState.copy(
+                            nombre = game.name,
+                            portadaUri = game.background_image ?: ""
+                        )
+
+                        gameViewModel.clearSearchResults()
+
+                    }
+                ) {
+
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(12.dp),
+                        horizontalArrangement = Arrangement.spacedBy(12.dp)
+                    ) {
+
+                        AsyncImage(
+                            model = game.background_image,
+                            contentDescription = game.name,
+                            modifier = Modifier.size(60.dp),
+                            contentScale = ContentScale.Crop
+                        )
+
+                        Text(
+                            text = game.name,
+                            modifier = Modifier.padding(top = 18.dp)
+                        )
+
+                    }
+
+                }
+
+            }
+
+        }
+
         DropdownField(
             label = "Biblioteca",
             options = plataformas,

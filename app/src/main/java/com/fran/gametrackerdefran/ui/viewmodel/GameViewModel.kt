@@ -254,6 +254,9 @@ class GameViewModel(
         deleteWishlistGame(wishlistGame)
 
     }
+    fun clearSearchResults() {
+        _searchResults.value = emptyList()
+    }
     fun searchGames(query: String) {
 
         if (query.isBlank()) {
