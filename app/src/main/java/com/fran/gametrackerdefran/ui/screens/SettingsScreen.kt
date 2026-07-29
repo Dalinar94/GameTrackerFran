@@ -263,7 +263,7 @@ fun SettingsScreen(
                 },
                 text = {
                     Text(
-                        "Versión 1.0\n\n" +
+                        "Versión 1.1.5\n\n" +
                                 "Desarrollado por Fran.\n\n" +
                                 "Aplicación para gestionar tu colección de videojuegos."
                     )
