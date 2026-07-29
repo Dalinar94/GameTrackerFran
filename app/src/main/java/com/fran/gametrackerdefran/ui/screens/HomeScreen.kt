@@ -24,18 +24,63 @@ import com.fran.gametrackerdefran.ui.components.SortMenu
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.material.icons.filled.Settings
-
+import androidx.compose.material.icons.filled.ViewList
+import androidx.compose.material.icons.filled.GridView
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.GridItemSpan
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
+import com.fran.gametrackerdefran.ui.components.GameGridCard
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.runtime.LaunchedEffect
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen( navController: NavController,
                 gameViewModel: GameViewModel) {
     val games by gameViewModel.games.collectAsState()
+    var isGridView by remember { mutableStateOf(false) }
+    var visibleGames by remember { mutableIntStateOf(20) }
+    val listState = rememberLazyListState()
+    LaunchedEffect(
+        listState.firstVisibleItemIndex,
+        gameViewModel.filteredGames.size
+    ) {
 
+        val lastVisible =
+            listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index ?: return@LaunchedEffect
+
+        if (
+            lastVisible >= visibleGames - 1 &&
+            visibleGames < gameViewModel.filteredGames.size
+        ) {
+            visibleGames += 20
+        }
+
+    }
     Scaffold(
         topBar = {
             AppTopBar(
                 title = "GameTracker",
                 actions = {
+
+                    IconButton(
+                        onClick = {
+                            isGridView = !isGridView
+                        }
+                    ) {
+                        Icon(
+                            imageVector = if (isGridView) {
+                                Icons.Default.ViewList
+                            } else {
+                                Icons.Default.GridView
+                            },
+                            contentDescription = "Cambiar vista"
+                        )
+                    }
 
                     IconButton(
                         onClick = {
@@ -88,61 +133,120 @@ fun HomeScreen( navController: NavController,
         }
 
     ) { padding ->
+        if (isGridView) {
 
-        LazyColumn(
-            modifier = Modifier.padding(padding)
-        ) {
-            item {
+            LazyVerticalGrid(
+                columns = GridCells.Fixed(2),
+                modifier = Modifier.padding(padding)
+            ) {
 
-                SearchBar(
-                    query = gameViewModel.searchQuery,
-                    onQueryChange = gameViewModel::updateSearchQuery
-                )
-
-            }
-
-            item {
-                SortMenu(
-                    selectedSort = gameViewModel.selectedSort,
-                    onSortSelected = gameViewModel::setSort
-                )
-            }
-            item {
-
-                StatusFilterBar(
-                    selectedFilter = gameViewModel.selectedFilter,
-                    onFilterSelected = gameViewModel::setFilter
-                )
-
-            }
-
-            if (games.isEmpty()) {
-
-                item {
-                    EmptyGames()
+                item(span = { GridItemSpan(2) }) {
+                    SearchBar(
+                        query = gameViewModel.searchQuery,
+                        onQueryChange = gameViewModel::updateSearchQuery
+                    )
                 }
 
-            } else {
-
-                items(gameViewModel.filteredGames) { juego ->
-                    GameCard(
-                        game = juego,
-                        onClick = {
-                            navController.navigate(
-                                Screen.GameDetail.createRoute(juego.id)
-                            )
-                        },
-                        onFavoriteClick = {
-                            gameViewModel.toggleFavorite(juego)
-                        }
+                item(span = { GridItemSpan(2) }) {
+                    SortMenu(
+                        selectedSort = gameViewModel.selectedSort,
+                        onSortSelected = gameViewModel::setSort
                     )
+                }
+
+                item(span = { GridItemSpan(2) }) {
+                    StatusFilterBar(
+                        selectedFilter = gameViewModel.selectedFilter,
+                        onFilterSelected = gameViewModel::setFilter
+                    )
+                }
+
+                if (games.isEmpty()) {
+
+                    item(span = { GridItemSpan(2) }) {
+                        EmptyGames()
+                    }
+
+                } else {
+
+                    items(gameViewModel.filteredGames) { juego ->
+
+                        GameGridCard(
+                            game = juego,
+                            onClick = {
+                                navController.navigate(
+                                    Screen.GameDetail.createRoute(juego.id)
+                                )
+                            },
+                            onFavoriteClick = {
+                                gameViewModel.toggleFavorite(juego)
+                            }
+                        )
+
+                    }
+
+                }
+
+            }
+
+        } else {
+            LazyColumn(
+                state = listState,
+                modifier = Modifier.padding(padding)
+            ) {
+                item {
+
+                    SearchBar(
+                        query = gameViewModel.searchQuery,
+                        onQueryChange = gameViewModel::updateSearchQuery
+                    )
+
+                }
+
+                item {
+                    SortMenu(
+                        selectedSort = gameViewModel.selectedSort,
+                        onSortSelected = gameViewModel::setSort
+                    )
+                }
+                item {
+
+                    StatusFilterBar(
+                        selectedFilter = gameViewModel.selectedFilter,
+                        onFilterSelected = gameViewModel::setFilter
+                    )
+
+                }
+
+                if (games.isEmpty()) {
+
+                    item {
+                        EmptyGames()
+                    }
+
+                } else {
+
+                    items(
+                        gameViewModel.filteredGames.take(visibleGames)
+                    ) { juego ->
+                        GameCard(
+                            game = juego,
+                            onClick = {
+                                navController.navigate(
+                                    Screen.GameDetail.createRoute(juego.id)
+                                )
+                            },
+                            onFavoriteClick = {
+                                gameViewModel.toggleFavorite(juego)
+                            }
+                        )
+
+                    }
 
                 }
 
             }
 
         }
-
     }
-
 }

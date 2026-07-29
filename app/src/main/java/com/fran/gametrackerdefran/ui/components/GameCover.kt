@@ -22,11 +22,12 @@ import com.fran.gametrackerdefran.ui.theme.GTRadius
 @Composable
 fun GameCover(
     imageUri: String?,
-    contentDescription: String?
+    contentDescription: String?,
+    modifier: Modifier = Modifier
 ) {
 
     Card(
-        modifier = Modifier
+        modifier = modifier
             .width(80.dp)
             .height(120.dp),
         shape = RoundedCornerShape(GTRadius.Medium),
