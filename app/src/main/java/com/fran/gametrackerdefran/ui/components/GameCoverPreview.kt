@@ -1,0 +1,25 @@
+package com.fran.gametrackerdefran.ui.components
+
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
+
+@Composable
+fun GameCoverPreview(
+    imageUri: String
+) {
+    if (imageUri.isNotBlank()) {
+        AsyncImage(
+            model = imageUri,
+            contentDescription = "Portada del juego",
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(180.dp),
+            contentScale = ContentScale.Crop
+        )
+    }
+}

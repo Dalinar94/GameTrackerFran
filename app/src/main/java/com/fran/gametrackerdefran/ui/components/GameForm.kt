@@ -1,32 +1,56 @@
 package com.fran.gametrackerdefran.ui.components
 
-import androidx.compose.foundation.layout.*
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
-import com.fran.gametrackerdefran.data.estados
-import com.fran.gametrackerdefran.data.model.GameFormState
-import com.fran.gametrackerdefran.data.plataformas
-import com.fran.gametrackerdefran.validation.GameFormValidator
-import com.fran.gametrackerdefran.data.model.GameFormErrors
-import com.fran.gametrackerdefran.data.model.Game
-import com.fran.gametrackerdefran.ui.viewmodel.GameViewModel
-import com.fran.gametrackerdefran.utils.getCurrentDate
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import coil.compose.AsyncImage
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import androidx.compose.foundation.shape.RoundedCornerShape
+import coil.compose.AsyncImage
+import com.fran.gametrackerdefran.data.estados
+import com.fran.gametrackerdefran.data.model.Game
+import com.fran.gametrackerdefran.data.model.GameFormErrors
+import com.fran.gametrackerdefran.data.model.GameFormState
+import com.fran.gametrackerdefran.data.plataformas
+import com.fran.gametrackerdefran.ui.viewmodel.GameViewModel
+import com.fran.gametrackerdefran.utils.ImageDownloader
+import com.fran.gametrackerdefran.utils.getCurrentDate
+import com.fran.gametrackerdefran.validation.GameFormValidator
+import com.fran.gametrackerdefran.ui.components.GameCoverPreview
+import android.app.DatePickerDialog
+import android.util.Log
+import java.util.Calendar
 @Composable
 fun GameForm(
     gameViewModel: GameViewModel,
     game: Game? = null,
     onSave: () -> Unit
 ) {
+
     var errors by remember { mutableStateOf(GameFormErrors()) }
     var showDeleteDialog by remember { mutableStateOf(false) }
+    var showDatePicker by remember { mutableStateOf(false) }
     var formState by remember(game) {
         mutableStateOf(
             if (game == null) {
@@ -47,7 +71,9 @@ fun GameForm(
     }
 
     val scrollState = rememberScrollState()
+    val context = LocalContext.current
     val searchResults by gameViewModel.searchResults.collectAsState()
+    val isLoading by gameViewModel.isLoading.collectAsState()
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -55,19 +81,7 @@ fun GameForm(
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        if (formState.portadaUri.isNotBlank()) {
-
-            AsyncImage(
-                model = formState.portadaUri,
-                contentDescription = "Portada del juego",
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(220.dp),
-                contentScale = ContentScale.Crop
-            )
-
-            Spacer(modifier = Modifier.height(8.dp))
-        }
+        GameCoverPreview(formState.portadaUri)
 
         OutlinedTextField(
             value = formState.nombre,
@@ -89,62 +103,32 @@ fun GameForm(
             onClick = {
                 gameViewModel.searchGames(formState.nombre)
             },
-            modifier = Modifier.fillMaxWidth()
+            enabled = !isLoading
         ) {
-            Text("Buscar en RAWG")
-        }
+            if (isLoading) {
+                CircularProgressIndicator(
+                    modifier = Modifier.size(20.dp),
+                    strokeWidth = 2.dp
+                )
 
-        if (searchResults.isNotEmpty()) {
+            } else {
 
-            Text(
-                text = "Resultados RAWG",
-                style = MaterialTheme.typography.titleMedium
-            )
-
-            searchResults.take(5).forEach { game ->
-
-                Card(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 4.dp),
-                    onClick = {
-
-                        formState = formState.copy(
-                            nombre = game.name,
-                            portadaUri = game.background_image ?: ""
-                        )
-
-                        gameViewModel.clearSearchResults()
-
-                    }
-                ) {
-
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(12.dp),
-                        horizontalArrangement = Arrangement.spacedBy(12.dp)
-                    ) {
-
-                        AsyncImage(
-                            model = game.background_image,
-                            contentDescription = game.name,
-                            modifier = Modifier.size(60.dp),
-                            contentScale = ContentScale.Crop
-                        )
-
-                        Text(
-                            text = game.name,
-                            modifier = Modifier.padding(top = 18.dp)
-                        )
-
-                    }
-
-                }
+                Text("Buscar portada")
 
             }
-
         }
+        RawgSearchResults(
+            games = searchResults,
+            onGameSelected = { game ->
+
+                formState = formState.copy(
+                    nombre = game.name,
+                    portadaUri = game.background_image ?: ""
+                )
+
+                gameViewModel.clearSearchResults()
+            }
+        )
 
         DropdownField(
             label = "Biblioteca",
@@ -206,17 +190,19 @@ fun GameForm(
             errorMessage = errors.estado
         )
 
+        //fecha
         if (formState.estado == com.fran.gametrackerdefran.data.model.GameStatus.COMPLETADO) {
 
             CompletionDateField(
                 date = formState.fechaCompletado,
                 onClick = {
-                    // De momento no hace nada.
-                    // En el siguiente paso abriremos aquí el calendario.
+                    showDatePicker = true
                 }
             )
 
         }
+
+
         Text("Valoración")
         StarRating(
 
@@ -264,7 +250,19 @@ fun GameForm(
                     errors = result.errors
 
                 if (result.isValid) {
+                    val portadaLocal = if (formState.portadaUri.startsWith("http")) {
 
+                        ImageDownloader.downloadImage(
+                            context = context,
+                            imageUrl = formState.portadaUri,
+                            fileName = formState.nombre
+                        ) ?: formState.portadaUri
+
+                    } else {
+
+                        formState.portadaUri
+
+                    }
                     val gameToSave = Game(
                         id = game?.id ?: 0,
                         nombre = formState.nombre,
@@ -275,7 +273,7 @@ fun GameForm(
                         estado = formState.estado!!,
                         favorito = game?.favorito ?: false,
                         fechaCompletado = formState.fechaCompletado.ifBlank { null },
-                        portadaUri = formState.portadaUri.ifBlank { null }
+                        portadaUri = portadaLocal.ifBlank { null }
                     )
 
                     if (game == null) {
@@ -358,6 +356,45 @@ fun GameForm(
             }
 
         )
+
+    }
+    if (showDatePicker) {
+
+        val calendar = Calendar.getInstance()
+
+        DatePickerDialog(
+            context,
+            { _, year, month, dayOfMonth ->
+
+                Log.d(
+                    "GameForm",
+                    "Fecha seleccionada: $year-${month + 1}-$dayOfMonth"
+                )
+
+                formState = formState.copy(
+                    fechaCompletado = String.format(
+                        "%04d-%02d-%02d",
+                        year,
+                        month + 1,
+                        dayOfMonth
+                    )
+                )
+
+                showDatePicker = false
+
+
+            },
+            calendar.get(Calendar.YEAR),
+            calendar.get(Calendar.MONTH),
+            calendar.get(Calendar.DAY_OF_MONTH)
+
+        ).apply {
+
+            setOnDismissListener {
+                showDatePicker = false
+            }
+
+        }.show()
 
     }
 }

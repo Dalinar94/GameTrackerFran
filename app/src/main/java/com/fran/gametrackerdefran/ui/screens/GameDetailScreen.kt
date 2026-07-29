@@ -36,7 +36,6 @@ import com.fran.gametrackerdefran.ui.components.LibraryIcon
 import com.fran.gametrackerdefran.ui.components.StarRating
 import com.fran.gametrackerdefran.ui.theme.GTRadius
 import com.fran.gametrackerdefran.ui.theme.GTSpacing
-import java.io.File
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun GameDetailScreen(
@@ -84,7 +83,7 @@ fun GameDetailScreen(
                 if (game.portadaUri != null) {
 
                     AsyncImage(
-                        model = File(game.portadaUri),
+                        model = game.portadaUri,
                         contentDescription = game.nombre,
                         modifier = Modifier
                             .fillMaxWidth()
@@ -199,7 +198,6 @@ fun GameDetailScreen(
                         }
                     }
                 }
-                Spacer(modifier = Modifier.height(GTSpacing.Medium))
 
                 Button(
                     onClick = {

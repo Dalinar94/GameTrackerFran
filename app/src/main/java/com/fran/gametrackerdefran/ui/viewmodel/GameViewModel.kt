@@ -21,6 +21,7 @@ import com.fran.gametrackerdefran.data.remote.RawgGame
 import com.fran.gametrackerdefran.data.repository.WishlistRepository
 import java.io.File
 import com.fran.gametrackerdefran.data.repository.RawgRepository
+import kotlinx.coroutines.flow.asStateFlow
 
 class GameViewModel(
     private val repository: GameRepository,
@@ -257,32 +258,26 @@ class GameViewModel(
     fun clearSearchResults() {
         _searchResults.value = emptyList()
     }
+    private val _isLoading = MutableStateFlow(false)
+    val isLoading = _isLoading.asStateFlow()
     fun searchGames(query: String) {
-
-        if (query.isBlank()) {
-            _searchResults.value = emptyList()
-            return
-        }
 
         viewModelScope.launch {
 
+            _isLoading.value = true
+
             try {
 
-                val games = rawgRepository.searchGames(query)
+                val results = rawgRepository.searchGames(query)
+                _searchResults.value = results
 
-                Log.d("RAWG_RESULTS", "Tamaño = ${games.size}")
+            } finally {
 
-                games.forEach {
-                    Log.d("RAWG_GAME", it.name)
-                }
+                _isLoading.value = false
 
-                _searchResults.value = games
-
-            } catch (e: Exception) {
-                Log.e("RAWG", "Error buscando juegos", e)
-                _searchResults.value = emptyList()
             }
 
         }
+
     }
 }

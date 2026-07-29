@@ -18,7 +18,6 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.fran.gametrackerdefran.ui.theme.GTElevation
 import com.fran.gametrackerdefran.ui.theme.GTRadius
-import java.io.File
 
 @Composable
 fun GameCover(
@@ -39,7 +38,7 @@ fun GameCover(
         if (!imageUri.isNullOrBlank()) {
 
             AsyncImage(
-                model = File(imageUri),
+                model = imageUri,
                 contentDescription = contentDescription,
                 modifier = Modifier.fillMaxSize(),
                 contentScale = ContentScale.Crop
